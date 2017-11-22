@@ -1,0 +1,44 @@
+{
+  "lista" : {
+    "001" : {
+      "itens" : {
+        "001" : {
+          "compra" : {
+            "001" : {
+              "data" : "07/11/2017",
+              "loja" : "Walmart",
+              "promocao" : true,
+              "quantidade" : 2,
+              "valorunitario" : 12.6
+            },
+            "002" : {
+              "data" : "10/11/2017",
+              "loja" : "Extra",
+              "promocao" : false,
+              "quantidade" : 2,
+              "valorunitario" : 11.5
+            }
+          },
+          "descricao" : "Arroz 5kg",
+          "prioridade" : "Alta",
+          "subdescricao" : "Camil"
+        },
+        "002" : {
+          "compra" : {
+            "001" : {
+              "data" : "07/11/2017",
+              "loja" : "Walmart",
+              "promocao" : false,
+              "quantidade" : 5,
+              "valorunitario" : 2.59
+            }
+          },
+          "descricao" : "Biscoito recheado",
+          "prioridade" : "Baixa",
+          "subdescricao" : "Passatempo"
+        }
+      },
+      "nome" : "Lista de compras mensal"
+    }
+  }
+}
