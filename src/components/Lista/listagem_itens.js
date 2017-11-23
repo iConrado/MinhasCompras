@@ -8,13 +8,20 @@ const edit = require('../../imgs/edit.png');
 
 export default class ListagemItens extends React.Component {
   // PROPS ESPERADAS:
+  // ----Item
   // id          = id do Item para repassar ao próximo componente de chamada
   // nome        = nome do Item a ser renderizado
   // descricao   = descricao do Item a ser renderizado
+  // prioridade  = indica a cor de fundo do item a ser renderizado
+  // ----Controle e navegação
   // updateItem  = função da homeScreen para atualizar a tela de itens após alterações
   // navigate    = controle de navegação para permitir a mudança de tela
-  //
-  //
+  // ----Compra
+  // check       = booleano para indicar se o item foi comprado na compra atual
+  // promo       = indicador de item em promoção
+  // qtde        = quantidade de itens comprados
+  // valorU      = valor unitário
+  // valorT      = valor total (qtde * valorU)
 
   removerItem(id) {
     Alert.alert(
@@ -37,9 +44,31 @@ export default class ListagemItens extends React.Component {
     const { navigate } = this.props.navigate;
     return (
       <View style={styles.item}>
-        
-        <Text style={styles.textoItem}>{this.props.nome}</Text>
-        
+        {/*View utilizada para abrigar o check de item comprado*/}
+        <View style={styles.check}> 
+          <Text>*</Text>
+        </View>
+        <View style={styles.desc}>
+          {/*View segmento de nome e descrição do item*/}
+          <View style={styles.segNome}> 
+            <Text style={styles.textoItem}>{this.props.nome}</Text>
+            <Text style={styles.textoItem}>{this.props.descricao}</Text>
+          </View>
+          {/*View segmento da indicação de promoção do item*/}
+          <View style={styles.segPromo}> 
+            <Text style={{ color: 'red', fontWeight: 'bold' }}>*</Text>
+          </View>
+          {/*View segmento da quantidade do item*/}
+          <View style={styles.segQtde}> 
+            <Text style={styles.textoItem}>1</Text>
+          </View>
+          {/*View segmento de valores do item*/}
+          <View style={styles.segValor}> 
+            <Text style={styles.textoItem}>U 12,99</Text>
+            <Text style={styles.textoItem}>T 12,99</Text>
+          </View>
+        </View>
+
         <View style={styles.botoes}>
           {/*Botão de apagar o Item*/}
           <TouchableOpacity 
@@ -103,23 +132,30 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
     backgroundColor: '#FCFBE3',
     borderBottomColor: '#DDD',
     borderBottomWidth: 1,
     borderRadius: 10,
     marginBottom: 2,
+    marginHorizontal: 5,
+  },
+  check: {
+    width: '6%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  desc: {
+    width: '64%',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   textoItem: {
-    width: '60%',
-    marginLeft: 10,
-    alignSelf: 'center',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 13,
+    fontWeight: 'normal',
     color: '#000000'
   },
   botoes: {
-    width: 120,
+    width: '30%',
     flexDirection: 'row',
   },
   excluiItem: {
@@ -159,5 +195,26 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50 / 2,
     backgroundColor: 'blue'
-  }
+  },
+  segNome: {
+    flexDirection: 'column',
+    flex: 7,
+  },
+  segPromo: {
+    flexDirection: 'column',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  segQtde: {
+    flexDirection: 'column',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  segValor: {
+    flexDirection: 'column',
+    flex: 3,
+    alignItems: 'center',
+  },
 });

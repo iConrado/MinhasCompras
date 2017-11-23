@@ -1,5 +1,12 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View, Image, Button } from 'react-native';
+import { 
+  ActivityIndicator, 
+  StyleSheet, 
+  Text, 
+  View, 
+  Image, 
+  Button,
+  ScrollView } from 'react-native';
 import Lista from './Functions/listas';
 import Item from './Functions/itens';
 import ListagemItens from './Lista/listagem_itens';
@@ -46,17 +53,19 @@ export default class ListaScreen extends React.Component {
     }
   }
 
-  async updateLista() {
-   /* Item.novoItem(ls.idLista, 'Arroz', 'teste', 'Alta');
-    Item.novoItem(ls.idLista, 'Feijão', 'teste', 'Alta');*/
-    /*Lista.removerLista();*/
-
+  async updateLista() {    
     const id = this.props.navigation.state.params.id;
     try {
       ls = await Lista.getLista(id);
     } catch (error) {
       console.log(error);
     }
+
+    //Rotina de testes para criação de ambiente
+    /*Item.remocaoManual();
+    console.log(ls.idLista);
+    Item.novoItem(ls.idLista, 'Arroz', 'teste', 'Alta');
+    Item.novoItem(ls.idLista, 'Feijão', 'teste', 'Alta');*/
 
     try {
       await Item.recuperar();
@@ -111,14 +120,14 @@ export default class ListaScreen extends React.Component {
               source={filtro} 
             />
           </View>
-          <View style={styles.corpo}>
+          <ScrollView style={styles.corpo}>
             {/*Componente que renderiza a lista de itens */}
             { mapaItem }
             <Button 
               title='Novo Item'
               onPress={() => navigate('Item', { id: this.props.navigation.state.params.id })}
             />
-          </View>
+          </ScrollView>
           <View style={styles.rodape}>
             <Text>Rodape</Text>
           </View>
