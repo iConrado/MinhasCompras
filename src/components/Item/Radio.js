@@ -23,6 +23,21 @@ export default class Radio extends Component {
   }
 
   render() {
+    let prio = 2;
+    console.log(this.props.prioridade);
+    switch (this.props.prioridade.toLowerCase()) {
+      case 'alta':
+        prio = 0;
+        break;
+      case 'media':
+        prio = 1;
+        break;
+      case 'baixa':
+        prio = 2;
+        break;
+      default:
+        prio = 2;
+    }
     return (
       <View style={{ marginVertical: 0 }} >
         <RadioForm
@@ -36,7 +51,7 @@ export default class Radio extends Component {
             itemShowKey="label"
             itemRealKey="prioridade"
             circleSize={25}
-            initial={2}
+            initial={prio}
             formHorizontal
             labelHorizontal
             onPress={(item) => this.onSelect(item)}

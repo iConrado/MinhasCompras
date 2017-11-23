@@ -40,7 +40,6 @@ export default class Item {
     try {
       const l = await AsyncStorage.getItem('itens');
       itens = JSON.parse(l);
-      console.log(itens); // console de teste
       if (l === null) {
         console.log('Item - Não existem dados armazenados no AsyncStorage');
         return false;
@@ -90,7 +89,6 @@ export default class Item {
     it.descricao = descricao;
     it.prioridade = prioridade;
     itens.push(it);
-    console.log(nome);
     // Tenta salvar e retorna o resultado da tentativa
     try {
       Item.salvar();
@@ -103,7 +101,33 @@ export default class Item {
     } 
   }
 
+  static editarItem(idItem, nome, descricao, prioridade) {
+    if (idItem === null || idItem === '') { return false; }
+    if (nome === null || nome === '') { return false; }
+    
+    console.log(itens);
+
+    const id = itens.reduce((preVal, elem, index) => {
+      if (elem.idItem === idItem) {
+        return preVal + index;
+      } else {
+        return preVal;
+      } 
+    }, 0);
+
+    itens[id].nome = nome;
+    itens[id].descricao = descricao;
+    itens[id].prioridade = prioridade;
+
+    Item.salvar();
+    
+    console.log(id);
+    console.log(idItem);
+
+  }
+
   static getItens(idLista) {
+    console.log(it);
     const it = itens.filter((elem) => elem.idLista === idLista);
     return it;
   }

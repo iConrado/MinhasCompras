@@ -95,7 +95,7 @@ export default class ListagemItens extends React.Component {
           {/*Botão de consultar o Item*/}
           <TouchableOpacity 
             style={styles.consultaItem}
-            onPress={() => navigate('Item', { id: this.props.id })} 
+            onPress={() => navigate('Item', { idItem: this.props.id, updateLista: this.props.updateLista })} 
           >
             <Image 
               style={styles.consultaImgItem} 
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
   botoes: {
     width: '30%',
     flexDirection: 'row',
+    alignItems: 'center',
   },
   excluiItem: {
     marginHorizontal: 5,

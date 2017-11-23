@@ -36,6 +36,7 @@ export default class ListaScreen extends React.Component {
     super(props);
     this.state = { 
       isLoading: true,
+      isNew: true,
       titulo: 'Teste',
     };
     this.updateLista = this.updateLista.bind(this);
@@ -44,9 +45,9 @@ export default class ListaScreen extends React.Component {
   componentDidMount() {
     try {
       if (this.updateLista()) {
-        console.log('Conseguiu recuperar');
+        console.log('ListaScreen - Conseguiu recuperar os itens da lista');
       } else {
-        console.log('Não conseguiu recuperar');
+        console.log('ListaScreen - Erro. Não conseguiu recuperar os itens da lista');
       }
     } catch (error) {
       console.log(error);
@@ -65,10 +66,12 @@ export default class ListaScreen extends React.Component {
     /*Item.remocaoManual();
     console.log(ls.idLista);
     Item.novoItem(ls.idLista, 'Arroz', 'teste', 'Alta');
-    Item.novoItem(ls.idLista, 'Feijão', 'teste', 'Alta');*/
+    Item.novoItem(ls.idLista, 'Feijão', 'teste', 'Alta');*/    
 
     try {
-      await Item.recuperar();
+      if (await Item.recuperar()) {
+        this.setState({ isNew: false });
+      }
       this.setState({ isLoading: false });
       return true;
     } catch (error) {
@@ -90,21 +93,8 @@ export default class ListaScreen extends React.Component {
       );
     }
 
-    const it = Item.getItens(ls.idLista);
-
-    const mapaItem = it.map((elem, index) => (
-      <ListagemItens 
-        key={index} 
-        id={elem.idItem} 
-        nome={elem.nome}
-        descricao={elem.descricao}
-        prioridade={elem.prioridade}
-        updateLista={this.updateLista} 
-        navigate={this.props.navigation} 
-      />
-    ));
-
-    return (
+    if (this.state.isNew) {
+      return (
         <View style={styles.container}>
           <View style={styles.titulo}>
             <Text style={styles.txtTitulo}>{ls.nome}</Text>
@@ -121,8 +111,7 @@ export default class ListaScreen extends React.Component {
             />
           </View>
           <ScrollView style={styles.corpo}>
-            {/*Componente que renderiza a lista de itens */}
-            { mapaItem }
+            <Text>Clique no botão abaixo para adicionar um novo item em sua lista.</Text>
             <Button 
               title='Novo Item'
               onPress={() => navigate('Item', { id: this.props.navigation.state.params.id })}
@@ -133,6 +122,51 @@ export default class ListaScreen extends React.Component {
           </View>
         </View>
       );
+    }
+
+    const it = Item.getItens(ls.idLista);
+
+    const mapaItem = it.map((elem, index) => (
+      <ListagemItens 
+        key={index} 
+        id={elem.idItem} 
+        nome={elem.nome}
+        descricao={elem.descricao}
+        prioridade={elem.prioridade}
+        updateLista={this.updateLista} 
+        navigate={this.props.navigation} 
+      />
+    ));
+
+    return (
+      <View style={styles.container}>
+        <View style={styles.titulo}>
+          <Text style={styles.txtTitulo}>{ls.nome}</Text>
+        </View>
+        <View style={styles.topo} >
+          <Image 
+            style={styles.calendario}
+            source={calendario} 
+          />
+          <Text style={styles.data}>07/11/2017</Text>
+          <Image 
+            style={styles.filtro}
+            source={filtro} 
+          />
+        </View>
+        <ScrollView style={styles.corpo}>
+          {/*Componente que renderiza a lista de itens */}
+          { mapaItem }
+          <Button 
+            title='Novo Item'
+            onPress={() => navigate('Item', { id: this.props.navigation.state.params.id })}
+          />
+        </ScrollView>
+        <View style={styles.rodape}>
+          <Text>Rodape</Text>
+        </View>
+      </View>
+    );
   }
 }
 
