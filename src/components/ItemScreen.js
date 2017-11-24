@@ -129,23 +129,39 @@ export default class ItemScreen extends React.Component {
 
           <Text style={styles.texto} >Item:</Text>
           <TextInput 
+            ref='Nome'
             style={styles.input}
-            autoCapitalize='sentences' 
+            autoCapitalize='sentences'
+            returnKeyType='next' 
+            maxLength={40}
             placeholder='Ex. Arroz 5kg / Biscoito Recheado'
             onChangeText={(text) => { this.setState({ itemNome: text }); }}
             value={this.state.itemNome}
+            onSubmitEditing={() => { 
+              this.refs.Descricao.focus(); 
+            }}
+            onEndEditing={() => { 
+              this.refs.Descricao.focus(); 
+            }}
           />
 
           <Text style={styles.texto} >Descrição do item/marca:</Text>
-          <TextInput 
+          <TextInput
+            ref='Descricao' 
             style={styles.input} 
-            autoCapitalize='sentences' 
+            autoCapitalize='sentences'
+            returnKeyType='next'
+            maxLength={40} 
             placeholder='Camil / Passatempo de morango'
             onChangeText={(text) => { this.setState({ itemDescricao: text }); }}
             value={this.state.itemDescricao}
+            onSubmitEditing={() => { 
+              this.salvarItem(); 
+            }}
           />
 
           <Button
+            ref='Salvar'
             title='Salvar Item'
             onPress={() => this.salvarItem()}
           />

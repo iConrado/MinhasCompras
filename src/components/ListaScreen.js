@@ -162,6 +162,8 @@ export default class ListaScreen extends React.Component {
         <ScrollView style={styles.corpo}>
           {/*Componente que renderiza a lista de itens */}
           { mapaItem }
+        </ScrollView>
+        <View style={styles.rodape}>
           <Button 
             title='Novo Item'
             onPress={() => navigate('Item', { 
@@ -169,9 +171,6 @@ export default class ListaScreen extends React.Component {
               updateLista: this.updateLista,
               prioridade: 'baixa' })}
           />
-        </ScrollView>
-        <View style={styles.rodape}>
-          <Text>Rodape</Text>
         </View>
       </View>
     );
@@ -227,6 +226,8 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   rodape: {
-    height: 60,
+    height: 50,
+    width: '95%',
+    marginHorizontal: 10,
   },
 });

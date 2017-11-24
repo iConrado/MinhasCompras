@@ -213,26 +213,26 @@ export default class HomeScreen extends React.Component {
             onRequestClose={() => this.setModalVisible()}
           >
             <View style={styles.alteraNome}>
-            <View>
-              <Text>Digite o nome da lista:</Text>
-              <TextInput
-                style={styles.inputNome}
-                autoFocus
-                maxLength={40}
-                placeholder='Ex.: Lista de compras semanal'
-                autoCapitalize='sentences'
-                selectTextOnFocus
-                onChangeText={(text) => this.setState({ novoNome: text })}
-                value={this.state.novoNome}
-              />
-              <Button 
-                onPress={() => { this.novaLista(); }} 
-                title='Salvar' 
-              />
-              <Text style={{ marginTop: 30, textAlign: 'center', fontSize: 11 }}>
-                Para cancelar, pressione o botão 'voltar' de seu aparelho
-              </Text>
-            </View>
+              <View>
+                <Text>Digite o nome da lista:</Text>
+                <TextInput
+                  style={styles.inputNome}
+                  autoFocus
+                  maxLength={40}
+                  placeholder='Ex.: Lista de compras semanal'
+                  autoCapitalize='sentences'
+                  selectTextOnFocus
+                  onChangeText={(text) => this.setState({ novoNome: text })}
+                  value={this.state.novoNome}
+                />
+                <Button 
+                  onPress={() => { this.novaLista(); }} 
+                  title='Salvar' 
+                />
+                <Text style={{ marginTop: 30, textAlign: 'center', fontSize: 11 }}>
+                  Para cancelar, pressione o botão 'voltar' de seu aparelho
+                </Text>
+              </View>
            </View>
           </Modal>
           {/*=====MODAL=====*/}
