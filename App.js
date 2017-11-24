@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, KeyboardAvoidingView } from 'react-native';
 
 import HomeScreen from './src/components/HomeScreen';
 import ListaScreen from './src/components/ListaScreen';
@@ -19,13 +19,13 @@ const AppNav = StackNavigator({
 export default class App extends React.Component {
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <StatusBar 
           translucent
         />
         <View style={{ height: StatusBar.currentHeight }} />
         <AppNav />
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }

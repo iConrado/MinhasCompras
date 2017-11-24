@@ -27,7 +27,8 @@ const filtro = require('../imgs/sort.png');
 export default class ListaScreen extends React.Component {
   // Tela de informalões gerais da Lista
   // Props esperadas:
-  // id
+  // idLista     = id da lista à qual será usada para resgatas os dados
+
   static navigationOptions = { //eslint-disable-line
     headerTitle: tituloLista,
   };
@@ -55,7 +56,7 @@ export default class ListaScreen extends React.Component {
   }
 
   async updateLista() {    
-    const id = this.props.navigation.state.params.id;
+    const id = this.props.navigation.state.params.idLista;
     try {
       ls = await Lista.getLista(id);
     } catch (error) {
@@ -114,7 +115,11 @@ export default class ListaScreen extends React.Component {
             <Text>Clique no botão abaixo para adicionar um novo item em sua lista.</Text>
             <Button 
               title='Novo Item'
-              onPress={() => navigate('Item', { id: this.props.navigation.state.params.id })}
+              onPress={() => navigate('Item', { 
+                idLista: this.props.navigation.state.params.idLista,
+                updateLista: this.updateLista,
+                prioridade: 'baixa' 
+              })}
             />
           </ScrollView>
           <View style={styles.rodape}>
@@ -125,7 +130,7 @@ export default class ListaScreen extends React.Component {
     }
 
     const it = Item.getItens(ls.idLista);
-
+    console.log(ls.idLista);
     const mapaItem = it.map((elem, index) => (
       <ListagemItens 
         key={index} 
@@ -159,7 +164,10 @@ export default class ListaScreen extends React.Component {
           { mapaItem }
           <Button 
             title='Novo Item'
-            onPress={() => navigate('Item', { id: this.props.navigation.state.params.id })}
+            onPress={() => navigate('Item', { 
+              idLista: this.props.navigation.state.params.idLista,
+              updateLista: this.updateLista,
+              prioridade: 'baixa' })}
           />
         </ScrollView>
         <View style={styles.rodape}>

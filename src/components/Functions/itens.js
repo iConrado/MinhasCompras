@@ -53,6 +53,7 @@ export default class Item {
 
   static removerItem(id) {
     // Verifica se não há uma tentativa de remover mais de um item por chamada
+    console.log(id);
     if (itens.filter((elem) => elem.idItem === id).length !== 1) { return false; }
     
     const temp = itens.filter((elem) => elem.idItem !== id);
@@ -105,14 +106,11 @@ export default class Item {
     if (idItem === null || idItem === '') { return false; }
     if (nome === null || nome === '') { return false; }
     
-    console.log(itens);
-
     const id = itens.reduce((preVal, elem, index) => {
       if (elem.idItem === idItem) {
         return preVal + index;
-      } else {
-        return preVal;
       } 
+      return preVal; 
     }, 0);
 
     itens[id].nome = nome;
@@ -120,15 +118,11 @@ export default class Item {
     itens[id].prioridade = prioridade;
 
     Item.salvar();
-    
-    console.log(id);
-    console.log(idItem);
-
   }
 
   static getItens(idLista) {
-    console.log(it);
     const it = itens.filter((elem) => elem.idLista === idLista);
+    // console.log(it);
     return it;
   }
 

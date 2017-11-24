@@ -13,10 +13,7 @@ import Item from './Functions/itens.js';
 const tituloItem = (
     <View>
       <Text style={{ color: 'red', fontSize: 18, fontWeight: 'bold' }} > 
-        Lista de compras XXXXXX
-      </Text>
-      <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
-        Incluir Item
+        Adicionar/Editar Item
       </Text>
     </View>
 );
@@ -45,13 +42,11 @@ export default class ItemScreen extends React.Component {
     this.state = { 
       isLoading: true,
       isNew: true,
-      prioAlta: false,
-      prioMedia: false,
-      prioBaixa: false,
       itemNome: '',
       itemDescricao: '',
       itemPrio: 'baixa',
     };
+    console.log(this.props.navigation.state.params.idLista);
   }
 
   componentDidMount() {
@@ -74,6 +69,8 @@ export default class ItemScreen extends React.Component {
           itemPrio: it.prioridade,
         });
       } 
+    } else {
+      this.setState({ itemPrio: 'baixa' });
     }
     this.setState({ isLoading: false });
   }
@@ -84,10 +81,21 @@ export default class ItemScreen extends React.Component {
 
     // Caso o idItem seja repassado, ativa a edição do mesmo
     if (idItem !== undefined) {
-      Item.editarItem(it.idItem, this.state.itemNome, this.state.itemDescricao, this.state.itemPrio);
+      Item.editarItem(
+        it.idItem, 
+        this.state.itemNome, 
+        this.state.itemDescricao, 
+        this.state.itemPrio
+      );
     } else {
-      console.log('Entrou na rotina de novo item');
+      Item.novoItem(
+        this.props.navigation.state.params.idLista,
+        this.state.itemNome, 
+        this.state.itemDescricao, 
+        this.state.itemPrio
+      );
     }
+    this.props.navigation.state.params.updateLista();
     goBack();
   }
 
@@ -102,57 +110,63 @@ export default class ItemScreen extends React.Component {
       );
     }
 
+    let prioridade = 'baixa';
+
+    if (this.props.navigation.state.params.idItem !== undefined) {
+      prioridade = it.prioridade;
+    }
+
     return (
-        <View style={styles.container}>
-          <ScrollView style={styles.topo} >
+      <View style={styles.container} >
+        <ScrollView style={styles.topo} >
+          <Text style={styles.texto} >Prioridade:</Text>
 
-            <Text style={styles.texto} >Item:</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder='Ex. Arroz 5kg / Biscoito Recheado'
-              onChangeText={(text) => {this.setState({ itemNome: text })}}
-              value={this.state.itemNome}
-            />
+          <View style={styles.checkView}>
 
-            <Text style={styles.texto} >Descrição do item/marca:</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder='Camil / Passatempo de morango'
-              onChangeText={(text) => {this.setState({ itemDescricao: text })}}
-              value={this.state.itemDescricao}
-            />
+            <Radio prioridade={prioridade} />
 
-            <Text style={styles.texto} >Prioridade:</Text>
+          </View>
 
-            <View style={styles.checkView}>
+          <Text style={styles.texto} >Item:</Text>
+          <TextInput 
+            style={styles.input}
+            autoCapitalize='sentences' 
+            placeholder='Ex. Arroz 5kg / Biscoito Recheado'
+            onChangeText={(text) => { this.setState({ itemNome: text }); }}
+            value={this.state.itemNome}
+          />
 
-              <Radio prioridade={it.prioridade} />
+          <Text style={styles.texto} >Descrição do item/marca:</Text>
+          <TextInput 
+            style={styles.input} 
+            autoCapitalize='sentences' 
+            placeholder='Camil / Passatempo de morango'
+            onChangeText={(text) => { this.setState({ itemDescricao: text }); }}
+            value={this.state.itemDescricao}
+          />
 
-            </View>
-
-            <Button
-              title='Salvar Item'
-              onPress={() => this.salvarItem()}
-            />
-
-          </ScrollView>
-        </View>
-      );
+          <Button
+            title='Salvar Item'
+            onPress={() => this.salvarItem()}
+          />
+        </ScrollView>
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
     backgroundColor: '#DDD',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   topo: {
-    flex: 0.8,
     width: '100%',
     paddingHorizontal: 15,
-    paddingTop: 20,
+    paddingTop: 10,
     backgroundColor: '#FFF',
     marginTop: 5,
   },
@@ -162,14 +176,14 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 18,
     color: '#555',
-    height: 50,
+    height: 40,
   },
   checkView: {
     flexDirection: 'row',
-    paddingTop: 15,
+    paddingTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 40,
+    marginBottom: 15,
   },
   checkAlta: {
     flexDirection: 'row',

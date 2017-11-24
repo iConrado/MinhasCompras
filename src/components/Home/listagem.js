@@ -63,7 +63,7 @@ export default class Listagem extends React.Component {
           {/*Botão de consultar a lista*/}
           <TouchableOpacity 
             style={styles.consultaLista}
-            onPress={() => navigate('Lista', { id: this.props.id })} 
+            onPress={() => navigate('Lista', { idLista: this.props.idLista })} 
           >
             <Image 
               style={styles.consultaImgLista} 

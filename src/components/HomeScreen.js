@@ -195,7 +195,7 @@ export default class HomeScreen extends React.Component {
       const mapaLista = base.map((elem, index) => (
         <Listagem 
           key={index} 
-          id={elem.idLista} 
+          idLista={elem.idLista} 
           nome={elem.nome}
           updateLista={this.updateLista} 
           navigate={this.props.navigation} 

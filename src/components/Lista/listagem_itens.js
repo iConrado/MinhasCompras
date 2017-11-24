@@ -95,7 +95,10 @@ export default class ListagemItens extends React.Component {
           {/*Botão de consultar o Item*/}
           <TouchableOpacity 
             style={styles.consultaItem}
-            onPress={() => navigate('Item', { idItem: this.props.id, updateLista: this.props.updateLista })} 
+            onPress={() => navigate('Item', { 
+              idItem: this.props.id, 
+              updateLista: this.props.updateLista
+            })} 
           >
             <Image 
               style={styles.consultaImgItem} 

@@ -18,14 +18,14 @@ const mockData = [
 ];
 
 export default class Radio extends Component {
-  onSelect(item) {
-    console.log(item);
-  }
-
   render() {
     let prio = 2;
-    console.log(this.props.prioridade);
-    switch (this.props.prioridade.toLowerCase()) {
+    let prioridade = 'baixa';
+    if (this.props.prioridade !== undefined) {
+      prioridade = this.props.prioridade.toLowerCase();
+    }
+    console.log(prioridade);
+    switch (prioridade) {
       case 'alta':
         prio = 0;
         break;
@@ -54,7 +54,7 @@ export default class Radio extends Component {
             initial={prio}
             formHorizontal
             labelHorizontal
-            onPress={(item) => this.onSelect(item)}
+            onPress={() => {}}
         />
       </View>
     );
