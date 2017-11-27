@@ -241,6 +241,14 @@ export default class HomeScreen extends React.Component {
           >
             {/* VARIÁVEL COM O COMPONENTE QUE CONSTROI A LISTA*/}
             {mapaLista}
+            
+            {/*================ TESTE RESUMO COMPRA =====================*/}
+            <Button
+              title='ResumoCompra(Teste)'
+              onPress={() => this.props.navigation.navigate('ResumoCompra', { 
+                idItem: 1019008102, 
+              })}
+            />
           </ScrollView>
           <View style={styles.rodape}>
             <Button

@@ -9,26 +9,25 @@ import {
   ScrollView } from 'react-native';
 import Lista from './Functions/listas';
 import Item from './Functions/itens';
+import Compra from './Functions/compras';
 import ListagemItens from './Lista/listagem_itens';
 
-let ls = {};
-let it = [];
+let its = {};
 
 const tituloLista = (
     <Text 
       style={{ color: 'red', fontSize: 18, fontWeight: 'bold' }} 
     > 
-      Itens
+      Resumo de Compras
     </Text>
 );
 
-const calendario = require('../imgs/calendar2.png');
-const filtro = require('../imgs/sort.png');
+const lixeira = require('../imgs/lixeira.png');
 
-export default class ListaScreen extends React.Component {
+export default class ResumoCompraScreen extends React.Component {
   // Tela de informalões gerais da Lista
   // Props esperadas:
-  // idLista     = id da lista à qual será usada para resgatas os dados
+  // idItem     = id do Item o qual será usado para resgatar os dados
 
   static navigationOptions = { //eslint-disable-line
     headerTitle: tituloLista,
@@ -39,7 +38,6 @@ export default class ListaScreen extends React.Component {
     this.state = { 
       isLoading: true,
       isNew: true,
-      titulo: 'Teste',
     };
     this.updateLista = this.updateLista.bind(this);
   }
@@ -47,9 +45,9 @@ export default class ListaScreen extends React.Component {
   componentDidMount() {
     try {
       if (this.updateLista()) {
-        console.log('ListaScreen - Conseguiu recuperar os itens da lista');
+        console.log('ResumoCompraScreen - Conseguiu recuperar as compras do Item');
       } else {
-        console.log('ListaScreen - Erro. Não conseguiu recuperar os itens da lista');
+        console.log('ResumoCompraScreen - Erro. Não conseguiu recuperar as compras do Item');
       }
     } catch (error) {
       console.log(error);
@@ -57,21 +55,24 @@ export default class ListaScreen extends React.Component {
   }
 
   async updateLista() {    
-    const id = this.props.navigation.state.params.idLista;
+    const id = this.props.navigation.state.params.idItem;
+
     try {
-      ls = await Lista.getLista(id);
+      its = await Item.getItem(id);
     } catch (error) {
       console.log(error);
     }
 
     //Rotina de testes para criação de ambiente
-    /*Item.remocaoManual();
-    console.log(ls.idLista);
-    Item.novoItem(ls.idLista, 'Arroz', 'teste', 'Alta');
-    Item.novoItem(ls.idLista, 'Feijão', 'teste', 'Alta');*/    
+    //Compra.remocaoManual();
+    /*const d1 = new Date(2017, 11, 5);
+    const d2 = new Date(2017, 11, 27);
+    console.log(its.idItem);
+    Compra.novaCompra(its.idItem, d1, 1, 2, 15.99, false);
+    Compra.novaCompra(its.idItem, d2, 1, 1, 12.39, true);*/
 
     try {
-      if (await Item.recuperar()) {
+      if (await Compra.recuperar()) {
         this.setState({ isNew: false });
       }
       this.setState({ isLoading: false });
@@ -80,10 +81,11 @@ export default class ListaScreen extends React.Component {
       console.log(error);
       return false;
     }
+    this.setState({ isLoading: false });
   }
 
   render() {
-    const { navigate } = this.props.navigation;
+    const { goBack } = this.props.navigation;
     
     if (this.state.isLoading) {
       return (
@@ -99,28 +101,14 @@ export default class ListaScreen extends React.Component {
       return (
         <View style={styles.container}>
           <View style={styles.titulo}>
-            <Text style={styles.txtTitulo}>{ls.nome}</Text>
-          </View>
-          <View style={styles.topo} >
-            <Image 
-              style={styles.calendario}
-              source={calendario} 
-            />
-            <Text style={styles.data}>07/11/2017</Text>
-            <Image 
-              style={styles.filtro}
-              source={filtro} 
-            />
+            <Text style={styles.txtTitulo}>{its.nome}</Text>
+            <Text style={styles.txtTitulo}>{its.descricao}</Text>
           </View>
           <ScrollView style={styles.corpo}>
             <Text>Clique no botão abaixo para adicionar um novo item em sua lista.</Text>
             <Button 
-              title='Novo Item'
-              onPress={() => navigate('Item', { 
-                idLista: this.props.navigation.state.params.idLista,
-                updateLista: this.updateLista,
-                prioridade: 'baixa' 
-              })}
+              title='Voltar'
+              onPress={() => goBack()}
             />
           </ScrollView>
           <View style={styles.rodape}>
@@ -130,15 +118,16 @@ export default class ListaScreen extends React.Component {
       );
     }
 
-    const it = Item.getItens(ls.idLista);
-    console.log(ls.idLista);
-    const mapaItem = it.map((elem, index) => (
+    const cps = Compra.getCompras(its.idItem);
+    console.log(its.idItem);
+    const mapaItem = cps.map((elem, index) => (
       <ListagemItens 
         key={index} 
         id={elem.idItem} 
-        nome={elem.nome}
-        descricao={elem.descricao}
-        prioridade={elem.prioridade}
+        idLoja={elem.idLoja}
+        data={elem.data}
+        qtde={elem.qtde}
+        valorU={elem.valorU}
         updateLista={this.updateLista} 
         navigate={this.props.navigation} 
       />
@@ -146,34 +135,21 @@ export default class ListaScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.titulo}>
-          <Text style={styles.txtTitulo}>{ls.nome}</Text>
+          <View style={styles.titulo}>
+            <Text style={styles.txtTitulo}>{its.nome}</Text>
+            <Text style={styles.txtTitulo}>{its.descricao}</Text>
+          </View>
+          <ScrollView style={styles.corpo}>
+            <Text>Componente para carregar as compras</Text>
+            <Button 
+              title='Voltar'
+              onPress={() => goBack()}
+            />
+          </ScrollView>
+          <View style={styles.rodape}>
+            <Text>Rodape</Text>
+          </View>
         </View>
-        <View style={styles.topo} >
-          <Image 
-            style={styles.calendario}
-            source={calendario} 
-          />
-          <Text style={styles.data}>07/11/2017</Text>
-          <Image 
-            style={styles.filtro}
-            source={filtro} 
-          />
-        </View>
-        <ScrollView style={styles.corpo}>
-          {/*Componente que renderiza a lista de itens */}
-          { mapaItem }
-        </ScrollView>
-        <View style={styles.rodape}>
-          <Button 
-            title='Novo Item'
-            onPress={() => navigate('Item', { 
-              idLista: this.props.navigation.state.params.idLista,
-              updateLista: this.updateLista,
-              prioridade: 'baixa' })}
-          />
-        </View>
-      </View>
     );
   }
 }
@@ -198,12 +174,13 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#FFF',
     paddingTop: 5,
-    paddingLeft: 30,
+    justifyContent: 'center',
   },
   txtTitulo: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#555'
+    color: '#555',
+    textAlign: 'center',
   },
   calendario: {
     height: 30,

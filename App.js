@@ -5,11 +5,13 @@ import { View, StatusBar, KeyboardAvoidingView } from 'react-native';
 import HomeScreen from './src/components/HomeScreen';
 import ListaScreen from './src/components/ListaScreen';
 import ItemScreen from './src/components/ItemScreen';
+import ResumoCompraScreen from './src/components/ResumoCompraScreen';
 
 const AppNav = StackNavigator({
   Home: { screen: HomeScreen },
   Lista: { screen: ListaScreen },
   Item: { screen: ItemScreen },
+  ResumoCompra: { screen: ResumoCompraScreen },
   }, {
     initialRouteName: 'Home',
     headerMode: 'float',

@@ -84,7 +84,9 @@ export default class ListagemItens extends React.Component {
           {/*Botão de histórico*/}
           <TouchableOpacity 
             style={styles.historicoItem}
-            onPress={() => { /* Adicionar função para histórico */ }} //eslint-disable-line
+            onPress={() => navigate('ResumoCompra', { 
+                idItem: this.props.id, 
+              })} 
           >
             <Image 
               style={styles.historicoImgItem} 

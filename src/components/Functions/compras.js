@@ -1,13 +1,13 @@
 import { AsyncStorage } from 'react-native';
 import hashCode from './hashcode';
 
-var itens = []; //eslint-disable-line
+var compras = []; //eslint-disable-line
 
-export default class Item {
+export default class Compra {
   static async remocaoManual() {
     try {
-      await AsyncStorage.removeItem('itens');
-      console.log('Sucesso ao limpar o item');
+      await AsyncStorage.removeItem('compras');
+      console.log('Sucesso ao limpar a compra');
       return true;
     } catch (error) {
       console.log(error);
@@ -16,10 +16,10 @@ export default class Item {
   }
 
   static async salvar() {
-    if (itens.length <= 0) {
+    if (compras.length <= 0) {
       try {
-        console.log(itens);
-        await AsyncStorage.removeItem('itens');
+        console.log(compras);
+        await AsyncStorage.removeItem('compras');
         return true;
       } catch (error) {
         console.log(error);
@@ -28,7 +28,7 @@ export default class Item {
     }
 
     try {
-      await AsyncStorage.setItem('itens', JSON.stringify(itens));
+      await AsyncStorage.setItem('compras', JSON.stringify(compras));
       return true;
     } catch (error) {
       console.log(error);
@@ -38,10 +38,10 @@ export default class Item {
 
   static async recuperar() {
     try {
-      const l = await AsyncStorage.getItem('itens');
-      itens = JSON.parse(l);
-      if (l === null) {
-        console.log('Item - Não existem dados armazenados no AsyncStorage');
+      const c = await AsyncStorage.getItem('compras');
+      compras = JSON.parse(c);
+      if (c === null) {
+        console.log('Compra - Não existem dados armazenados no AsyncStorage');
         return false;
       }
       return true;
@@ -51,17 +51,17 @@ export default class Item {
     }
   }
 
-  static removerItem(id) {
+  static removerCompra(id) {
     // Verifica se não há uma tentativa de remover mais de um item por chamada
     console.log(id);
-    if (itens.filter((elem) => elem.idItem === id).length !== 1) { return false; }
+    if (compras.filter((elem) => elem.idCompra === id).length !== 1) { return false; }
     
-    const temp = itens.filter((elem) => elem.idItem !== id);
-    itens = temp;
+    const temp = compras.filter((elem) => elem.idCompra !== id);
+    compras = temp;
 
     // Tenta salvar e retorna o resultado da tentativa
     try {
-      Item.salvar();
+      Compra.salvar();
       return true;
     } catch (error) {
       console.log(error);
@@ -69,69 +69,54 @@ export default class Item {
     }
   }
 
-  static novoItem(idL, nome, descricao, prioridade) {
-    // ATRIBUTOS DA CLASSE ITEM:
+  static novaCompra(idI, data, idLoja, qtde, valorU, promocao) {
+    // ATRIBUTOS DA CLASSE COMPRA:
     // ==================================
-    // idItem PK (Gerado com hashCode)
-    // idLista FK
-    // nome
-    // descricao
-    // prioridade
+    // idCompra PK (Gerado com hashCode)
+    // idItem FK
+    // data
+    // idLoja
+    // qtde
+    // valorU   (valor unitário)
+    // promoção (booleano)
     // ==================================
 
-    if (idL === null || idL === '') { return false; }
-    if (nome === null || nome === '') { return false; }
-    if (itens === null) { itens = []; }
+    if (idI === null || idI === '') { return false; }
+    if (compras === null) { compras = []; }
     const d = new Date();
-    const it = new Item();
-    it.idItem = hashCode(d.getTime().toString());
-    it.idLista = idL;
-    it.nome = nome;
-    it.descricao = descricao;
-    it.prioridade = prioridade;
-    itens.push(it);
+    const cp = new Compra();
+    cp.idCompra = hashCode(d.getTime().toString());
+    cp.idItem = idI;
+    cp.data = data;
+    cp.idLoja = idLoja;
+    cp.qtde = qtde;
+    cp.valorU = valorU;
+    cp.promocao = promocao;
+    compras.push(cp);
     // Tenta salvar e retorna o resultado da tentativa
     try {
-      Item.salvar();
-      console.log('Item salvo');
+      Compra.salvar();
+      console.log('Compra salva');
       return true;
     } catch (error) {
       console.log(error);
-      console.log('Erro ao salvar o novo item criado');
+      console.log('Erro ao salvar a nova compra');
       return false;
     } 
   }
 
-  static editarItem(idItem, nome, descricao, prioridade) {
-    if (idItem === null || idItem === '') { return false; }
-    if (nome === null || nome === '') { return false; }
-    
-    const id = itens.reduce((preVal, elem, index) => {
-      if (elem.idItem === idItem) {
-        return preVal + index;
-      } 
-      return preVal; 
-    }, 0);
-
-    itens[id].nome = nome;
-    itens[id].descricao = descricao;
-    itens[id].prioridade = prioridade;
-
-    Item.salvar();
-  }
-
-  static getItens(idLista) {
-    const it = itens.filter((elem) => elem.idLista === idLista);
+  static getCompras(idItem) {
+    const cp = compras.filter((elem) => elem.idItem === idItem);
     // console.log(it);
-    return it;
+    return cp;
   }
 
-  static getItem(id) { 
+  static getCompra(id) { 
     // Teste se retornou mais de um item, caso contrário retorna falso
-    if (itens.filter((elem) => elem.idItem === id).length !== 1) { return false; }
+    if (compras.filter((elem) => elem.idCompra === id).length !== 1) { return false; }
     
     // busca a Item específica e retorna um objeto {} ao invés de um array []
-    const temp = itens.filter((elem) => elem.idItem === id);
+    const temp = compras.filter((elem) => elem.idCompra === id);
     return temp[0];
   }
 }
