@@ -6,11 +6,12 @@ import {
   View, 
   Image, 
   Button,
-  ScrollView } from 'react-native';
+  ScrollView,
+  FlatList } from 'react-native';
 import Lista from './Functions/listas';
 import Item from './Functions/itens';
 import Compra from './Functions/compras';
-import ListagemItens from './Lista/listagem_itens';
+import ListagemCompras from './Compras/listagem_compras';
 
 let its = {};
 
@@ -120,8 +121,8 @@ export default class ResumoCompraScreen extends React.Component {
 
     const cps = Compra.getCompras(its.idItem);
     console.log(its.idItem);
-    const mapaItem = cps.map((elem, index) => (
-      <ListagemItens 
+    const mapaCompras = cps.map((elem, index) => (
+      <ListagemCompras
         key={index} 
         id={elem.idItem} 
         idLoja={elem.idLoja}
@@ -135,21 +136,22 @@ export default class ResumoCompraScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-          <View style={styles.titulo}>
-            <Text style={styles.txtTitulo}>{its.nome}</Text>
-            <Text style={styles.txtTitulo}>{its.descricao}</Text>
-          </View>
-          <ScrollView style={styles.corpo}>
-            <Text>Componente para carregar as compras</Text>
-            <Button 
-              title='Voltar'
-              onPress={() => goBack()}
-            />
-          </ScrollView>
-          <View style={styles.rodape}>
-            <Text>Rodape</Text>
-          </View>
+        <View style={styles.titulo}>
+          <Text style={styles.txtTitulo}>{its.nome}</Text>
+          <Text style={styles.txtTitulo}>{its.descricao}</Text>
         </View>
+        <ScrollView style={styles.corpo}>
+          { mapaCompras }
+          <Text>Componente para carregar as compras</Text>
+          <Button 
+            title='Voltar'
+            onPress={() => goBack()}
+          />
+        </ScrollView>
+        <View style={styles.rodape}>
+          <Text>Rodape</Text>
+        </View>
+      </View>
     );
   }
 }
