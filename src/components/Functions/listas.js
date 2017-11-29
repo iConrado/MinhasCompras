@@ -1,5 +1,6 @@
 import { AsyncStorage } from 'react-native';
 import hashCode from './hashcode';
+import Item from './itens';
 
 var listas = []; //eslint-disable-line
 
@@ -60,6 +61,8 @@ export default class Lista {
     // Tenta salvar e retorna o resultado da tentativa
     try {
       Lista.salvar();
+      //Remove todos os itens associados a esta lista para otimizar o array salvo no dispositivo
+      Item.removerItemPorLista(id);
       return true;
     } catch (error) {
       console.log(error);

@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   botaoNovo: {
     height: 60,
     width: 60,
-    marginLeft: 5,
+    marginLeft: 15,
     backgroundColor: '#5679FF',
     borderRadius: 60 / 2,
     justifyContent: 'center',

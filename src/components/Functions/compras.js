@@ -52,11 +52,29 @@ export default class Compra {
   }
 
   static removerCompra(id) {
-    // Verifica se não há uma tentativa de remover mais de um item por chamada
+    // Verifica se não há uma tentativa de remover mais de uma compra por chamada
     console.log(id);
     if (compras.filter((elem) => elem.idCompra === id).length !== 1) { return false; }
     
     const temp = compras.filter((elem) => elem.idCompra !== id);
+    compras = temp;
+
+    // Tenta salvar e retorna o resultado da tentativa
+    try {
+      Compra.salvar();
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  static removerCompraPorItem(idItem) {
+    // Verifica se não há uma tentativa de remover menos de uma compra por chamada
+    console.log(idItem);
+    if (compras.filter((elem) => elem.idItem === idItem).length < 1) { return false; }
+    
+    const temp = compras.filter((elem) => elem.idItem !== idItem);
     compras = temp;
 
     // Tenta salvar e retorna o resultado da tentativa

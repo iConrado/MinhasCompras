@@ -26,6 +26,13 @@ const mockData = [
 ];
 
 export default class Radio extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      idLoja: 0
+    };
+  }
+
   render() {
     return (
       <View style={{ marginVertical: 0 }} >
@@ -40,10 +47,10 @@ export default class Radio extends Component {
             itemShowKey="label"
             itemRealKey="idLoja"
             circleSize={20}
-            initial={1}
+            initial={0}
             formHorizontal
             labelHorizontal
-            onPress={() => {}}
+            onPress={(item) => {this.props.updateLoja(item.idLoja)}}
         />
       </View>
     );

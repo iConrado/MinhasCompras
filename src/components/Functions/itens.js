@@ -1,5 +1,6 @@
 import { AsyncStorage } from 'react-native';
 import hashCode from './hashcode';
+import Compra from './compras';
 
 var itens = []; //eslint-disable-line
 
@@ -57,6 +58,30 @@ export default class Item {
     if (itens.filter((elem) => elem.idItem === id).length !== 1) { return false; }
     
     const temp = itens.filter((elem) => elem.idItem !== id);
+    itens = temp;
+
+    // Tenta salvar e retorna o resultado da tentativa
+    try {
+      Item.salvar();
+      //Remove todas as compras asssociadas a este item para otimizar o array salvo no dispositivo
+      Compra.removerCompraPorItem(id);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  static removerItemPorLista(idLista) {
+    // Verifica se não há uma tentativa de remover menos de um item por chamada
+    console.log(idLista);
+    if (itens.filter((elem) => elem.idLista === idLista).length < 1) { return false; }
+    
+    //Remover compras associadas a estes itens que se´rão removidos pela exclusão da lista
+    const tempItem = itens.filter((elem) => elem.idLista === idLista);
+    tempItem.map((elem) => Compra.removerCompraPorItem(elem.idItem));
+
+    const temp = itens.filter((elem) => elem.idLista !== idLista);
     itens = temp;
 
     // Tenta salvar e retorna o resultado da tentativa
