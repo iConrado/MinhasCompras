@@ -1,83 +1,37 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from 'react-native';
-import Compra from '../Functions/compras';
+import { View, Text, StyleSheet } from 'react-native';
 
-const lixeira = require('../../imgs/lixeira.png');
-
-export default class ListagemCompras extends React.Component {
-  // PROPS ESPERADAS:
-  // ----Item
-  // id          = id do Item para repassar ao próximo componente de chamada
-  // ----Controle e navegação
-  // updateLista = função da ResumoCompraScreen para atualizar a tela de itens após alterações
-  // navigate    = controle de navegação para permitir a mudança de tela
-  // ----Compra
-  // idCompra    = id da Compra
-  // idLoja      = id da loja onde foi comprado o item
-  // data        = data da compra
-  // promo       = indicador de item em promoção
-  // qtde        = quantidade de itens comprados
-  // valorU      = valor unitário
-  // valorT      = valor total (qtde * valorU)
-  
-
-  removerItem(id) {
-    Alert.alert(
-      this.props.nome,
-      'Deseja realmente excluir esta compra?',
-      [
-        { text: 'Cancelar', onPress: () => {}, style: 'cancel' },
-        { text: 'Excluir', 
-          onPress: () => {
-            Compra.removerCompra(id);
-            this.props.updateLista();
-          } 
-        }
-      ],
-      { cancelable: false }
-    ); 
-  }
-
+export default class CabecalhoCompra extends React.Component {
   render() {
-    const d = new Date(Date.parse(this.props.data));
     return (
       <View style={styles.item}>
         {/*View segmento de loja da compra*/}
         <View style={styles.segLoja}> 
-          <Text style={styles.textoItem}>{this.props.idLoja}</Text>
+          <Text style={styles.textoItem}>Loja</Text>
         </View>
         {/*View segmento de promoção da compra*/}
         <View style={styles.segPromo}> 
-          <Text style={styles.textoItem}>*</Text>
+          <Text style={styles.textoItem}>Promo</Text>
         </View>
         {/*View segmento da data da compra*/}
         <View style={styles.segData}> 
-          <Text>{d.toLocaleDateString()}</Text>
+          <Text>Data</Text>
         </View>
         {/*View segmento da quantidade da compra*/}
         <View style={styles.segQtde}> 
-          <Text style={styles.textoItem}>{this.props.qtde}</Text>
+          <Text style={styles.textoItem}>Qtde</Text>
         </View>
         {/*View segmento de valor unitário da compra*/}
         <View style={styles.segValorU}> 
-          <Text style={styles.textoItem}>{this.props.valorU}</Text>
+          <Text style={styles.textoItem}>Vlr Unit</Text>
         </View>
         {/*View segmento de valor total da compra*/}
         <View style={styles.segValorT}> 
-          <Text style={styles.textoItem}>{this.props.qtde * this.props.valorU}</Text>
+          <Text style={styles.textoItem}>Vlr Total</Text>
         </View>
-
         <View style={styles.botoes}>
           {/*Botão de apagar o Item*/}
-          <TouchableOpacity 
-            style={styles.excluiItem}
-            onPress={() => { this.removerItem(this.props.idCompra); }} 
-          >
-            <Image 
-              style={styles.excluiImgItem} 
-              source={lixeira} 
-            />
-          </TouchableOpacity>
+          <Text>Excluir</Text>
         </View>
       </View>
     );
@@ -109,10 +63,12 @@ const styles = StyleSheet.create({
     width: '90%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    //borderBottomColor: '#DDD',
-    //borderBottomWidth: 1,
-    //borderRadius: 10,
-    marginBottom: 2,
+    borderBottomColor: '#DDD',
+    borderBottomWidth: 1,
+    borderTopColor: '#DDD',
+    borderTopWidth: 1,
+    backgroundColor: '#F0F0F0',
+    marginBottom: 5,
     marginHorizontal: 5,
   },
   check: {

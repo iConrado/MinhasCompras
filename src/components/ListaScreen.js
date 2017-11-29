@@ -73,6 +73,8 @@ export default class ListaScreen extends React.Component {
     try {
       if (await Item.recuperar()) {
         this.setState({ isNew: false });
+      } else {
+        this.setState({ isNew: true });
       }
       this.setState({ isLoading: false });
       return true;

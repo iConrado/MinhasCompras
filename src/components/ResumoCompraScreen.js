@@ -4,13 +4,12 @@ import {
   StyleSheet, 
   Text, 
   View, 
-  Image, 
   Button,
   ScrollView,
-  FlatList } from 'react-native';
-import Lista from './Functions/listas';
+  TouchableOpacity } from 'react-native';
 import Item from './Functions/itens';
 import Compra from './Functions/compras';
+import CabecalhoCompra from './Compras/cabecalho_compras';
 import ListagemCompras from './Compras/listagem_compras';
 
 let its = {};
@@ -22,8 +21,6 @@ const tituloLista = (
       Resumo de Compras
     </Text>
 );
-
-const lixeira = require('../imgs/lixeira.png');
 
 export default class ResumoCompraScreen extends React.Component {
   // Tela de informalões gerais da Lista
@@ -75,18 +72,20 @@ export default class ResumoCompraScreen extends React.Component {
     try {
       if (await Compra.recuperar()) {
         this.setState({ isNew: false });
+      } else {
+        this.setState({ isNew: true });
       }
       this.setState({ isLoading: false });
       return true;
     } catch (error) {
       console.log(error);
+      this.setState({ isLoading: false });
       return false;
     }
-    this.setState({ isLoading: false });
   }
 
   render() {
-    const { goBack } = this.props.navigation;
+    const { navigate } = this.props.navigation;
     
     if (this.state.isLoading) {
       return (
@@ -107,10 +106,6 @@ export default class ResumoCompraScreen extends React.Component {
           </View>
           <ScrollView style={styles.corpo}>
             <Text>Clique no botão abaixo para adicionar um novo item em sua lista.</Text>
-            <Button 
-              title='Voltar'
-              onPress={() => goBack()}
-            />
           </ScrollView>
           <View style={styles.rodape}>
             <Text>Rodape</Text>
@@ -125,6 +120,7 @@ export default class ResumoCompraScreen extends React.Component {
       <ListagemCompras
         key={index} 
         id={elem.idItem} 
+        idCompra={elem.idCompra}
         idLoja={elem.idLoja}
         data={elem.data}
         qtde={elem.qtde}
@@ -141,15 +137,31 @@ export default class ResumoCompraScreen extends React.Component {
           <Text style={styles.txtTitulo}>{its.descricao}</Text>
         </View>
         <ScrollView style={styles.corpo}>
+          <CabecalhoCompra />
+          {/* Componente que lista as compras */}
           { mapaCompras }
-          <Text>Componente para carregar as compras</Text>
-          <Button 
-            title='Voltar'
-            onPress={() => goBack()}
-          />
         </ScrollView>
         <View style={styles.rodape}>
-          <Text>Rodape</Text>
+          <View style={styles.valoresLabel}>
+            <Text>Menor Valor: </Text>
+            <Text>Maior Valor: </Text>
+            <Text>Último valor: </Text>
+          </View>
+          <View style={styles.valoresConteudo}>
+            <Text>R$ 11,25</Text>
+            <Text>R$ 12,49 </Text>
+            <Text>R$ 12,49 </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.botaoNovo}
+            onPress={() => navigate('Compra', {
+              idItem: its.idItem,
+              updateLista: this.updateLista,
+              navigation: this.props.navigation
+            })}
+          >
+            <Text style={styles.textoBotao}>+</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -159,7 +171,7 @@ export default class ResumoCompraScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DDD',
+    backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -206,8 +218,36 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   rodape: {
-    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    /*height: 50,*/
     width: '95%',
     marginHorizontal: 10,
+    marginBottom: 10,
+    paddingHorizontal: 5,
   },
+  valoresLabel: {
+    flex: 4,
+    borderTopColor: '#DDD',
+    borderTopWidth: 1,
+  },
+  valoresConteudo: {
+    flex: 3,
+    borderTopColor: '#DDD',
+    borderTopWidth: 1,
+  },
+  botaoNovo: {
+    height: 60,
+    width: 60,
+    marginLeft: 5,
+    backgroundColor: '#5679FF',
+    borderRadius: 60 / 2,
+    justifyContent: 'center',
+    elevation: 3,
+  },
+  textoBotao: {
+    textAlign: 'center',
+    fontSize: 28,
+    color: '#FFF'
+  }
 });

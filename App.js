@@ -6,12 +6,14 @@ import HomeScreen from './src/components/HomeScreen';
 import ListaScreen from './src/components/ListaScreen';
 import ItemScreen from './src/components/ItemScreen';
 import ResumoCompraScreen from './src/components/ResumoCompraScreen';
+import CompraScreen from './src/components/CompraScreen';
 
 const AppNav = StackNavigator({
   Home: { screen: HomeScreen },
   Lista: { screen: ListaScreen },
   Item: { screen: ItemScreen },
   ResumoCompra: { screen: ResumoCompraScreen },
+  Compra: { screen: CompraScreen },
   }, {
     initialRouteName: 'Home',
     headerMode: 'float',
