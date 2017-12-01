@@ -80,6 +80,7 @@ export default class Compra {
     // Tenta salvar e retorna o resultado da tentativa
     try {
       Compra.salvar();
+      console.log('Processo concluido');
       return true;
     } catch (error) {
       console.log(error);

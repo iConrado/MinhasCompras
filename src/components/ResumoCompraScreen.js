@@ -140,10 +140,16 @@ export default class ResumoCompraScreen extends React.Component {
         navigate={this.props.navigation} 
       />
     ));
-    const ultimo = cps[0].valorU;
-    const media = cps.reduce((total, item) => total + item.valorU, 0) / cps.length;
-    cps.sort((a, b) => a.valorU - b.valorU);
-    const menor = cps[0].valorU;
+
+    let ultimo = 0;
+    let media = 0;
+    let menor = 0;
+    if (cps[0] !== undefined) {
+      ultimo = cps[0].valorU;
+      media = cps.reduce((total, item) => total + item.valorU, 0) / cps.length;
+      cps.sort((a, b) => a.valorU - b.valorU);
+      menor = cps[0].valorU;
+    }
 
     return (
       <View style={styles.container}>

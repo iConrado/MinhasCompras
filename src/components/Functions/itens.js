@@ -54,7 +54,6 @@ export default class Item {
 
   static removerItem(id) {
     // Verifica se não há uma tentativa de remover mais de um item por chamada
-    console.log(id);
     if (itens.filter((elem) => elem.idItem === id).length !== 1) { return false; }
     
     const temp = itens.filter((elem) => elem.idItem !== id);
@@ -86,7 +85,9 @@ export default class Item {
 
     // Tenta salvar e retorna o resultado da tentativa
     try {
+      console.log('Vai entrar no passo 3');
       Item.salvar();
+      console.log('Entrou no passo 3');
       return true;
     } catch (error) {
       console.log(error);

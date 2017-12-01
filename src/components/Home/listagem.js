@@ -41,7 +41,7 @@ export default class Listagem extends React.Component {
           {/*Botão de apagar a lista*/}
           <TouchableOpacity 
             style={styles.excluiLista}
-            onPress={() => { this.removerLista(this.props.id); }} 
+            onPress={() => { this.removerLista(this.props.idLista); }} 
           >
             <Image 
               style={styles.excluiImgLista} 
