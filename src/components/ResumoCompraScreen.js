@@ -3,8 +3,7 @@ import {
   ActivityIndicator, 
   StyleSheet, 
   Text, 
-  View, 
-  Button,
+  View,
   ScrollView,
   TouchableOpacity } from 'react-native';
 import Item from './Functions/itens';
@@ -105,17 +104,28 @@ export default class ResumoCompraScreen extends React.Component {
             <Text style={styles.txtTitulo}>{its.descricao}</Text>
           </View>
           <ScrollView style={styles.corpo}>
-            <Text>Clique no botão abaixo para adicionar um novo item em sua lista.</Text>
+            <Text style={{ textAlign: 'center' }}>
+              Clique no botão abaixo para adicionar um novo item em sua lista.
+            </Text>
           </ScrollView>
-          <View style={styles.rodape}>
-            <Text>Rodape</Text>
+          <View style={styles.rodapeNovo}>
+            <TouchableOpacity
+            style={styles.botaoNovo}
+              onPress={() => navigate('Compra', {
+                idItem: its.idItem,
+                updateLista: this.updateLista,
+                navigation: this.props.navigation
+              })}
+            >
+              <Text style={styles.textoBotao}>+</Text>
+            </TouchableOpacity>
           </View>
         </View>
       );
     }
 
     const cps = Compra.getCompras(its.idItem);
-    console.log(its.idItem);
+    cps.sort((a, b) => Date.parse(b.data) - Date.parse(a.data));
     const mapaCompras = cps.map((elem, index) => (
       <ListagemCompras
         key={index} 
@@ -125,10 +135,15 @@ export default class ResumoCompraScreen extends React.Component {
         data={elem.data}
         qtde={elem.qtde}
         valorU={elem.valorU}
+        promo={elem.promocao}
         updateLista={this.updateLista} 
         navigate={this.props.navigation} 
       />
     ));
+    const ultimo = cps[0].valorU;
+    const media = cps.reduce((total, item) => total + item.valorU, 0) / cps.length;
+    cps.sort((a, b) => a.valorU - b.valorU);
+    const menor = cps[0].valorU;
 
     return (
       <View style={styles.container}>
@@ -144,13 +159,13 @@ export default class ResumoCompraScreen extends React.Component {
         <View style={styles.rodape}>
           <View style={styles.valoresLabel}>
             <Text>Menor Valor: </Text>
-            <Text>Maior Valor: </Text>
+            <Text>Valor médio: </Text>
             <Text>Último valor: </Text>
           </View>
           <View style={styles.valoresConteudo}>
-            <Text>R$ 11,25</Text>
-            <Text>R$ 12,49 </Text>
-            <Text>R$ 12,49 </Text>
+            <Text>R$ {menor.toFixed(2).replace('.', ',')}</Text>
+            <Text>R$ {media.toFixed(2).replace('.', ',')}</Text>
+            <Text>R$ {ultimo.toFixed(2).replace('.', ',')}</Text>
           </View>
           <TouchableOpacity
             style={styles.botaoNovo}
@@ -220,6 +235,15 @@ const styles = StyleSheet.create({
   rodape: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    /*height: 50,*/
+    width: '95%',
+    marginHorizontal: 10,
+    marginBottom: 10,
+    paddingHorizontal: 5,
+  },
+  rodapeNovo: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     /*height: 50,*/
     width: '95%',
     marginHorizontal: 10,

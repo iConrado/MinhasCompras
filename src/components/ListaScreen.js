@@ -12,7 +12,6 @@ import Item from './Functions/itens';
 import ListagemItens from './Lista/listagem_itens';
 
 let ls = {};
-let it = [];
 
 const tituloLista = (
     <Text 

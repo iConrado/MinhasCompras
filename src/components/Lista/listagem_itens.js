@@ -4,7 +4,7 @@ import Item from '../Functions/itens';
 
 const lixeira = require('../../imgs/lixeira.png');
 const historico = require('../../imgs/chart.png');
-const edit = require('../../imgs/edit.png');
+//const edit = require('../../imgs/edit.png');
 
 export default class ListagemItens extends React.Component {
   // PROPS ESPERADAS:
@@ -51,8 +51,24 @@ export default class ListagemItens extends React.Component {
         <View style={styles.desc}>
           {/*View segmento de nome e descrição do item*/}
           <View style={styles.segNome}> 
-            <Text style={styles.textoItem}>{this.props.nome}</Text>
-            <Text style={styles.textoItem}>{this.props.descricao}</Text>
+            <Text 
+              style={styles.textoItem} 
+              onLongPress={() => navigate('Item', { 
+                idItem: this.props.id, 
+                updateLista: this.props.updateLista
+              })}
+            >
+              {this.props.nome}
+            </Text>
+            <Text 
+              style={styles.textoItem} 
+              onLongPress={() => navigate('Item', { 
+                idItem: this.props.id, 
+                updateLista: this.props.updateLista
+              })}
+            >
+              {this.props.descricao}
+            </Text>
           </View>
           {/*View segmento da indicação de promoção do item*/}
           <View style={styles.segPromo}> 
@@ -95,7 +111,7 @@ export default class ListagemItens extends React.Component {
           </TouchableOpacity>
 
           {/*Botão de consultar o Item*/}
-          <TouchableOpacity 
+         {/* <TouchableOpacity 
             style={styles.consultaItem}
             onPress={() => navigate('Item', { 
               idItem: this.props.id, 
@@ -106,7 +122,7 @@ export default class ListagemItens extends React.Component {
               style={styles.consultaImgItem} 
               source={edit} 
             />
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
         </View>
       </View>
     );
@@ -145,12 +161,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   check: {
-    width: '6%',
+    width: '8%',
     justifyContent: 'center',
     alignItems: 'center'
   },
   desc: {
-    width: '64%',
+    width: '72%',
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
@@ -160,9 +176,10 @@ const styles = StyleSheet.create({
     color: '#000000'
   },
   botoes: {
-    width: '30%',
+    width: '20%',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   excluiItem: {
     marginHorizontal: 5,

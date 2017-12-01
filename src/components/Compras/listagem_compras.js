@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from 'react-native';
 import Compra from '../Functions/compras';
+import Data from '../Functions/datas';
 
 const lixeira = require('../../imgs/lixeira.png');
 
@@ -40,6 +41,7 @@ export default class ListagemCompras extends React.Component {
 
   render() {
     const d = new Date(Date.parse(this.props.data));
+    console.log(this.props.promo);
     return (
       <View style={styles.item}>
         {/*View segmento de loja da compra*/}
@@ -48,11 +50,13 @@ export default class ListagemCompras extends React.Component {
         </View>
         {/*View segmento de promoção da compra*/}
         <View style={styles.segPromo}> 
-          <Text style={styles.textoItem}>*</Text>
+          <Text style={styles.textoPromo}>
+            {this.props.promo ? '*' : ''}
+          </Text>
         </View>
         {/*View segmento da data da compra*/}
         <View style={styles.segData}> 
-          <Text>{d.toLocaleDateString()}</Text>
+          <Text>{Data.dataToStringAA(d)}</Text>
         </View>
         {/*View segmento da quantidade da compra*/}
         <View style={styles.segQtde}> 
@@ -60,11 +64,15 @@ export default class ListagemCompras extends React.Component {
         </View>
         {/*View segmento de valor unitário da compra*/}
         <View style={styles.segValorU}> 
-          <Text style={styles.textoItem}>{this.props.valorU}</Text>
+          <Text style={styles.textoValor}>
+            {this.props.valorU.toFixed(2).replace('.', ',')}
+          </Text>
         </View>
         {/*View segmento de valor total da compra*/}
         <View style={styles.segValorT}> 
-          <Text style={styles.textoItem}>{this.props.qtde * this.props.valorU}</Text>
+          <Text style={styles.textoValor}>
+            {(this.props.qtde * this.props.valorU).toFixed(2).replace('.', ',')}
+          </Text>
         </View>
 
         <View style={styles.botoes}>
@@ -131,6 +139,19 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center',
   },
+  textoPromo: {
+    fontSize: 13,
+    fontWeight: 'normal',
+    color: '#FF0000',
+    textAlign: 'center',
+  },
+  textoValor: {
+    fontSize: 13,
+    fontWeight: 'normal',
+    color: '#000000',
+    textAlign: 'right',
+    paddingRight: 5,
+  },
   excluiItem: {
     marginHorizontal: 5,
     alignSelf: 'center'
@@ -188,11 +209,11 @@ const styles = StyleSheet.create({
   },
   segValorU: {
     flex: 6,
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   segValorT: {
     flex: 6,
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   botoes: {
     flex: 6,
