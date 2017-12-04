@@ -53,7 +53,6 @@ export default class Compra {
 
   static removerCompra(id) {
     // Verifica se não há uma tentativa de remover mais de uma compra por chamada
-    console.log(id);
     if (compras.filter((elem) => elem.idCompra === id).length !== 1) { return false; }
     
     const temp = compras.filter((elem) => elem.idCompra !== id);
@@ -71,7 +70,6 @@ export default class Compra {
 
   static removerCompraPorItem(idItem) {
     // Verifica se não há uma tentativa de remover menos de uma compra por chamada
-    console.log(idItem);
     if (compras.filter((elem) => elem.idItem === idItem).length < 1) { return false; }
     
     const temp = compras.filter((elem) => elem.idItem !== idItem);
@@ -80,7 +78,6 @@ export default class Compra {
     // Tenta salvar e retorna o resultado da tentativa
     try {
       Compra.salvar();
-      console.log('Processo concluido');
       return true;
     } catch (error) {
       console.log(error);
@@ -135,7 +132,6 @@ export default class Compra {
     if (compras === null) { return false; }
     const cps = [];
     const temp = arrItens.map(item => compras.filter((elem) => elem.idItem === item.idItem));
-    console.log('temp', temp);
     temp.map(item => item.map(item2 => cps.push(item2)));
     return cps;
   }

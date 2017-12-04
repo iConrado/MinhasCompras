@@ -50,7 +50,6 @@ export default class CompraScreen extends React.Component {
       cpPromo: false,
     };
     this.updateLoja = this.updateLoja.bind(this);
-    console.log(this.props.navigation.state.params.idItem);
   }
 
   componentDidMount() {
@@ -144,6 +143,7 @@ export default class CompraScreen extends React.Component {
             <Text style={styles.texto} >Quantidade:</Text>
             <Picker 
               style={styles.picker}
+              prompt='Selecione a quantidade de itens:'
               selectedValue={this.state.cpQtde}
               onValueChange={(itemValue) => this.setState({ cpQtde: itemValue })}
             >
