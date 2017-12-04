@@ -6,6 +6,8 @@ const lixeira = require('../../imgs/lixeira.png');
 const historico = require('../../imgs/chart.png');
 //const edit = require('../../imgs/edit.png');
 
+let cps = [];
+
 export default class ListagemItens extends React.Component {
   // PROPS ESPERADAS:
   // ----Item
@@ -17,11 +19,30 @@ export default class ListagemItens extends React.Component {
   // updateItem  = função da homeScreen para atualizar a tela de itens após alterações
   // navigate    = controle de navegação para permitir a mudança de tela
   // ----Compra
-  // check       = booleano para indicar se o item foi comprado na compra atual
-  // promo       = indicador de item em promoção
-  // qtde        = quantidade de itens comprados
-  // valorU      = valor unitário
-  // valorT      = valor total (qtde * valorU)
+  // compras     = array com todas as compras da lista para filtragem
+  // maxData     = objeto Date com a data da última compra para renderização do item 
+  constructor(props) {
+    super(props);
+    this.state = {
+      comprado: false,
+    };
+  }
+
+  componentWillMount() {
+    if (this.props.compras.length > 0) {
+      cps = this.props.compras.filter(elem => 
+        elem.idItem === this.props.id && Date.parse(elem.data) === Date.parse(this.props.maxData));
+      if (cps.length > 0) {
+        this.setState({ comprado: true });
+      }
+    } else {
+      this.setState({ comprado: false });
+    }
+  }
+  
+  getPromo() {
+    return cps[0].promocao ? '*' : '';
+  }
 
   removerItem(id) {
     Alert.alert(
@@ -46,7 +67,7 @@ export default class ListagemItens extends React.Component {
       <View style={styles.item}>
         {/*View utilizada para abrigar o check de item comprado*/}
         <View style={styles.check}> 
-          <Text>*</Text>
+          <Text>{this.state.comprado ? '*' : ''}</Text>
         </View>
         <View style={styles.desc}>
           {/*View segmento de nome e descrição do item*/}
@@ -72,16 +93,25 @@ export default class ListagemItens extends React.Component {
           </View>
           {/*View segmento da indicação de promoção do item*/}
           <View style={styles.segPromo}> 
-            <Text style={{ color: 'red', fontWeight: 'bold' }}>*</Text>
+            <Text style={{ color: 'red', fontWeight: 'bold' }}>
+              {this.state.comprado ? this.getPromo() : ''}
+            </Text>
           </View>
           {/*View segmento da quantidade do item*/}
           <View style={styles.segQtde}> 
-            <Text style={styles.textoItem}>1</Text>
+            <Text style={styles.textoItem}>
+              {this.state.comprado ? cps[0].qtde : ''}
+            </Text>
           </View>
           {/*View segmento de valores do item*/}
           <View style={styles.segValor}> 
-            <Text style={styles.textoItem}>U 12,99</Text>
-            <Text style={styles.textoItem}>T 12,99</Text>
+            <Text style={styles.textoItem}>
+              U {this.state.comprado ? cps[0].valorU.toFixed(2).replace('.', ',') : ''}
+            </Text>
+            <Text style={styles.textoItem}>
+              T {this.state.comprado ? 
+                (cps[0].qtde * cps[0].valorU).toFixed(2).replace('.', ',') : ''}
+            </Text>
           </View>
         </View>
 
@@ -102,6 +132,7 @@ export default class ListagemItens extends React.Component {
             style={styles.historicoItem}
             onPress={() => navigate('ResumoCompra', { 
                 idItem: this.props.id, 
+                updateLista: this.props.updateLista
               })} 
           >
             <Image 

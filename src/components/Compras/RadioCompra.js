@@ -50,7 +50,7 @@ export default class Radio extends Component {
             initial={0}
             formHorizontal
             labelHorizontal
-            onPress={(item) => {this.props.updateLoja(item.idLoja)}}
+            onPress={(item) => { this.props.updateLoja(item.idLoja); }}
         />
       </View>
     );

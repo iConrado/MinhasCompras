@@ -11,6 +11,7 @@ export default class ListagemCompras extends React.Component {
   // id          = id do Item para repassar ao próximo componente de chamada
   // ----Controle e navegação
   // updateLista = função da ResumoCompraScreen para atualizar a tela de itens após alterações
+  // updateItens = função da ListaScreen para atualizar a tela com itens após alterações
   // navigate    = controle de navegação para permitir a mudança de tela
   // ----Compra
   // idCompra    = id da Compra
@@ -32,6 +33,7 @@ export default class ListagemCompras extends React.Component {
           onPress: () => {
             Compra.removerCompra(id);
             this.props.updateLista();
+            this.props.updateItens();
           } 
         }
       ],

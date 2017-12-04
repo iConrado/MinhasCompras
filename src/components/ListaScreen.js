@@ -9,16 +9,23 @@ import {
   ScrollView } from 'react-native';
 import Lista from './Functions/listas';
 import Item from './Functions/itens';
+import Compra from './Functions/compras';
+import Data from './Functions/datas';
 import ListagemItens from './Lista/listagem_itens';
 
 let ls = {};
+let it = [];
+let cps = [];
+let maxData = '';
+let mapaItem = '';
+let d = '';
 
-const tituloLista = (
-    <Text 
-      style={{ color: 'red', fontSize: 18, fontWeight: 'bold' }} 
-    > 
-      Itens
-    </Text>
+const tituloLista = (titulo) => (
+  <Text 
+    style={{ color: 'red', fontSize: 18, fontWeight: 'bold' }} 
+  > 
+    {titulo}
+  </Text>
 );
 
 const calendario = require('../imgs/calendar2.png');
@@ -29,9 +36,9 @@ export default class ListaScreen extends React.Component {
   // Props esperadas:
   // idLista     = id da lista à qual será usada para resgatas os dados
 
-  static navigationOptions = { //eslint-disable-line
-    headerTitle: tituloLista,
-  };
+  static navigationOptions = ({ navigation }) => ({ //eslint-disable-line
+    headerTitle: tituloLista(navigation.state.params.nome),
+  });
 
   constructor(props) {
     super(props);
@@ -55,7 +62,12 @@ export default class ListaScreen extends React.Component {
     }
   }
 
-  async updateLista() {    
+  async updateLista() {
+    this.setState({
+      isLoading: true,
+      isNew: true,
+    });
+
     const id = this.props.navigation.state.params.idLista;
     try {
       ls = await Lista.getLista(id);
@@ -64,14 +76,42 @@ export default class ListaScreen extends React.Component {
     }
 
     //Rotina de testes para criação de ambiente
-    /*Item.remocaoManual();
-    console.log(ls.idLista);
-    Item.novoItem(ls.idLista, 'Arroz', 'teste', 'Alta');
+    //Item.remocaoManual();
+    /*Item.novoItem(ls.idLista, 'Arroz', 'teste', 'Alta');
     Item.novoItem(ls.idLista, 'Feijão', 'teste', 'Alta');*/    
 
     try {
       if (await Item.recuperar()) {
-        this.setState({ isNew: false });
+        it = Item.getItens(ls.idLista);
+        if (it.length > 0) {
+          if (await Compra.recuperar()) {
+            cps = Compra.getComprasMultiplas(it);
+            if (cps.length > 0) {
+              cps.sort((a, b) => Date.parse(b.data) - Date.parse(a.data));
+              d = new Date(Date.parse(cps[0].data));
+            }
+          } else {
+            cps = [];
+            d = '';
+          }
+          maxData = typeof d === 'object' ? d : '';
+          mapaItem = it.map((elem, index) => (
+            <ListagemItens 
+              key={index} 
+              id={elem.idItem} 
+              nome={elem.nome}
+              descricao={elem.descricao}
+              prioridade={elem.prioridade}
+              compras={cps}
+              maxData={maxData}
+              updateLista={this.updateLista} 
+              navigate={this.props.navigation} 
+            />
+          ));
+          this.setState({ isNew: false });
+        } else {
+          this.setState({ isNew: true });
+        }
       } else {
         this.setState({ isNew: true });
       }
@@ -99,15 +139,15 @@ export default class ListaScreen extends React.Component {
     if (this.state.isNew) {
       return (
         <View style={styles.container}>
-          <View style={styles.titulo}>
+          {/*<View style={styles.titulo}>
             <Text style={styles.txtTitulo}>{ls.nome}</Text>
-          </View>
+          </View>*/}
           <View style={styles.topo} >
             <Image 
               style={styles.calendario}
               source={calendario} 
             />
-            <Text style={styles.data}>07/11/2017</Text>
+            <Text style={styles.data}>Adicione itens à sua lista</Text>
             <Image 
               style={styles.filtro}
               source={filtro} 
@@ -131,37 +171,34 @@ export default class ListaScreen extends React.Component {
       );
     }
 
-    const it = Item.getItens(ls.idLista);
-    console.log(ls.idLista);
-    const mapaItem = it.map((elem, index) => (
-      <ListagemItens 
-        key={index} 
-        id={elem.idItem} 
-        nome={elem.nome}
-        descricao={elem.descricao}
-        prioridade={elem.prioridade}
-        updateLista={this.updateLista} 
-        navigate={this.props.navigation} 
-      />
-    ));
-
     return (
       <View style={styles.container}>
-        <View style={styles.titulo}>
+        {/*<View style={styles.titulo}>
           <Text style={styles.txtTitulo}>{ls.nome}</Text>
-        </View>
+        </View>*/}
         <View style={styles.topo} >
           <Image 
             style={styles.calendario}
             source={calendario} 
           />
-          <Text style={styles.data}>07/11/2017</Text>
+          <Text style={styles.data}>
+            {maxData !== '' ? 
+              `${Data.dataToString(maxData)} (última compra)` : 'Nenhuma compra registrada'}
+            </Text>
           <Image 
             style={styles.filtro}
             source={filtro} 
           />
         </View>
         <ScrollView style={styles.corpo}>
+          { /* Apresenta texto de UX indicando como inserir uma compra */ }
+          { maxData === '' ?
+            <Text style={{ textAlign: 'center' }}>
+              Clique no ícone de histórico para adicionar 
+              uma compra do seu respectivo item da lista.
+            </Text>
+            : null
+          }
           {/*Componente que renderiza a lista de itens */}
           { mapaItem }
         </ScrollView>
@@ -207,8 +244,8 @@ const styles = StyleSheet.create({
     color: '#555'
   },
   calendario: {
-    height: 30,
-    width: 30,
+    height: 25,
+    width: 25,
     marginHorizontal: 15,
   },
   data: {

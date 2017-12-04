@@ -51,6 +51,10 @@ export default class ResumoCompraScreen extends React.Component {
     }
   }
 
+  /*componentWillUnmount() {
+    this.props.navigation.state.params.updateLista();
+  }*/
+
   async updateLista() {    
     const id = this.props.navigation.state.params.idItem;
 
@@ -114,6 +118,7 @@ export default class ResumoCompraScreen extends React.Component {
               onPress={() => navigate('Compra', {
                 idItem: its.idItem,
                 updateLista: this.updateLista,
+                updateItens: this.props.navigation.state.params.updateLista,
                 navigation: this.props.navigation
               })}
             >
@@ -136,7 +141,8 @@ export default class ResumoCompraScreen extends React.Component {
         qtde={elem.qtde}
         valorU={elem.valorU}
         promo={elem.promocao}
-        updateLista={this.updateLista} 
+        updateLista={this.updateLista}
+        updateItens={this.props.navigation.state.params.updateLista}
         navigate={this.props.navigation} 
       />
     ));
@@ -178,6 +184,7 @@ export default class ResumoCompraScreen extends React.Component {
             onPress={() => navigate('Compra', {
               idItem: its.idItem,
               updateLista: this.updateLista,
+              updateItens: this.props.navigation.state.params.updateLista,
               navigation: this.props.navigation
             })}
           >

@@ -52,7 +52,10 @@ export default class Listagem extends React.Component {
           {/*Botão de histórico*/}
           <TouchableOpacity 
             style={styles.historicoLista}
-            onPress={() => { /* Adicionar função para histórico */ }} //eslint-disable-line
+            onPress={() => navigate('ResumoLista', { 
+              idLista: this.props.idLista,
+              nome: this.props.nome,
+            })} //eslint-disable-line
           >
             <Image 
               style={styles.historicoImgLista} 
@@ -63,7 +66,10 @@ export default class Listagem extends React.Component {
           {/*Botão de consultar a lista*/}
           <TouchableOpacity 
             style={styles.consultaLista}
-            onPress={() => navigate('Lista', { idLista: this.props.idLista })} 
+            onPress={() => navigate('Lista', { 
+              idLista: this.props.idLista,
+              nome: this.props.nome,
+            })} 
           >
             <Image 
               style={styles.consultaImgLista} 

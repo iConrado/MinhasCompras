@@ -29,7 +29,7 @@ export default class CompraScreen extends React.Component {
   // idItem           = (opcional) caso seja repassado, a rotina deverá realizar update no item
   //                               do contrário, criará um Item novo.
   // ----Controle e navegação
-  // updateItem  = função da homeScreen para atualizar a tela de itens após alterações
+  // updateLista = função da ResumoCompraScreen para atualizar a tela de compras após alterações
   // navigate    = controle de navegação para permitir a mudança de tela
   // 
 
@@ -88,6 +88,7 @@ export default class CompraScreen extends React.Component {
     }
     console.log(this.state.cpPromo);
     this.props.navigation.state.params.updateLista();
+    this.props.navigation.state.params.updateItens();
     goBack();
   }
 

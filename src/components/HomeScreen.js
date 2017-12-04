@@ -105,7 +105,6 @@ export default class HomeScreen extends React.Component {
     
     try {
       Lista.novaLista(nome);
-      Alert.alert('', 'Lista incluída com sucesso.');
     } catch (error) {
       Alert.alert('', 'Erro na gravação da lista.');
       console.log(error);
@@ -116,6 +115,7 @@ export default class HomeScreen extends React.Component {
   }
 
   async updateLista() {
+    //Lista.remocaoManual();
     /*Lista.novaLista('Lista de Compras Mensal');
     Lista.novaLista('Lista de Compras Semanal');*/
     /*Lista.removerLista();*/

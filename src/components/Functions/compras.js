@@ -18,7 +18,6 @@ export default class Compra {
   static async salvar() {
     if (compras.length <= 0) {
       try {
-        console.log(compras);
         await AsyncStorage.removeItem('compras');
         return true;
       } catch (error) {
@@ -44,6 +43,7 @@ export default class Compra {
         console.log('Compra - Não existem dados armazenados no AsyncStorage');
         return false;
       }
+      console.log('Compra - recuperadas com sucesso');
       return true;
     } catch (error) {
       console.log(error);
@@ -97,7 +97,7 @@ export default class Compra {
     // idLoja
     // qtde
     // valorU   (valor unitário)
-    // promoção (booleano)
+    // promocao (booleano)
     // ==================================
 
     if (idI === null || idI === '') { return false; }
@@ -128,6 +128,16 @@ export default class Compra {
     const cp = compras.filter((elem) => elem.idItem === idItem);
     // console.log(it);
     return cp;
+  }
+
+  static getComprasMultiplas(arrItens) {
+    //Retorna um array com todos os objetos de compras relacionados a um array de Itens
+    if (compras === null) { return false; }
+    const cps = [];
+    const temp = arrItens.map(item => compras.filter((elem) => elem.idItem === item.idItem));
+    console.log('temp', temp);
+    temp.map(item => item.map(item2 => cps.push(item2)));
+    return cps;
   }
 
   static getCompra(id) { 
