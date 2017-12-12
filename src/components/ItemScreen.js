@@ -46,11 +46,15 @@ export default class ItemScreen extends React.Component {
       itemDescricao: '',
       itemPrio: 'baixa',
     };
-    console.log(this.props.navigation.state.params.idLista);
+    this.updatePrio=this.updatePrio.bind(this);
   }
 
   componentDidMount() {
     this.updateItem();
+  }
+
+  updatePrio(prio) {
+    this.setState({ itemPrio: prio });
   }
 
   async updateItem() {
@@ -122,9 +126,10 @@ export default class ItemScreen extends React.Component {
           <Text style={styles.texto} >Prioridade:</Text>
 
           <View style={styles.checkView}>
-
-            <Radio prioridade={prioridade} />
-
+            <Radio 
+              prioridade={prioridade}
+              updatePrio={this.updatePrio} 
+            />
           </View>
 
           <Text style={styles.texto} >Item:</Text>

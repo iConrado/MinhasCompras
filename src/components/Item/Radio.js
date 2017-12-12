@@ -5,15 +5,15 @@ import RadioForm from 'react-native-radio-form';
 const mockData = [
     {
         label: 'Alta',
-        prioridade: 'alta'
+        prioridade: 'alta',
     },
     {
         label: 'Média',
-        prioridade: 'media'
+        prioridade: 'media',
     },
     {
         label: 'Baixa',
-        prioridade: 'baixa'
+        prioridade: 'baixa',
     }
 ];
 
@@ -24,7 +24,6 @@ export default class Radio extends Component {
     if (this.props.prioridade !== undefined) {
       prioridade = this.props.prioridade.toLowerCase();
     }
-    console.log(prioridade);
     switch (prioridade) {
       case 'alta':
         prio = 0;
@@ -45,7 +44,7 @@ export default class Radio extends Component {
             contentContainerStyle={{ 
               width: 400, 
               justifyContent: 'space-between', 
-              alignItems: 'center' 
+              alignItems: 'center',
             }}
             dataSource={mockData}
             itemShowKey="label"
@@ -54,7 +53,7 @@ export default class Radio extends Component {
             initial={prio}
             formHorizontal
             labelHorizontal
-            onPress={() => {}}
+            onPress={(item) => {this.props.updatePrio(item.prioridade)}}
         />
       </View>
     );

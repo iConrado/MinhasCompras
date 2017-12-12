@@ -61,10 +61,23 @@ export default class ListagemItens extends React.Component {
     ); 
   }
 
+  getStyle(prioridade) {
+    switch (prioridade.toLowerCase()) {
+      case 'alta':
+        return styles.itemAlta;
+      case 'media':
+        return styles.itemMedia;
+      case 'baixa':
+        return styles.itemBaixa;
+      default:
+        return styles.item;
+    }
+  }
+
   render() {
     const { navigate } = this.props.navigate;
     return (
-      <View style={styles.item}>
+      <View style={this.getStyle(this.props.prioridade)}>
         {/*View utilizada para abrigar o check de item comprado*/}
         <View style={styles.check}> 
           <Text>{this.state.comprado ? '*' : ''}</Text>
@@ -185,6 +198,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: '#FCFBE3',
+    borderBottomColor: '#DDD',
+    borderBottomWidth: 1,
+    borderRadius: 10,
+    marginBottom: 2,
+    marginHorizontal: 5,
+  },
+  itemBaixa: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#EDFFEE',
+    borderBottomColor: '#DDD',
+    borderBottomWidth: 1,
+    borderRadius: 10,
+    marginBottom: 2,
+    marginHorizontal: 5,
+  },
+  itemMedia: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFE5',
+    borderBottomColor: '#DDD',
+    borderBottomWidth: 1,
+    borderRadius: 10,
+    marginBottom: 2,
+    marginHorizontal: 5,
+  },
+  itemAlta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFE2E2',
     borderBottomColor: '#DDD',
     borderBottomWidth: 1,
     borderRadius: 10,

@@ -5,11 +5,14 @@ import {
   Text, 
   View,
   Button,
-  Picker, } from 'react-native';
+  Picker,
+  ScrollView } from 'react-native';
+import ChartView from 'react-native-highcharts';
 //import Lista from './Functions/listas';
 import Item from './Functions/itens';
 import Compra from './Functions/compras';
 import Data from './Functions/datas';
+import Loja from './Resumo/lojas';
 
 let its = [];
 let cps = [];
@@ -18,6 +21,7 @@ let itensUnicos = 0;
 let itensTotais = 0;
 let valorMedio = 0;
 let valorTotalCompra = 0;
+dados = []; //{ name: 'Nenhuma loja', y: 1 }
 
 const tituloLista = (titulo) => (
   <View>
@@ -61,6 +65,49 @@ export default class ResumoListaScreen extends React.Component {
     }
   }
 
+  calculaEstatistica(data) {
+    const tempCps = cps.filter((item) => item.data == data.toJSON());
+
+    valorTotalCompra = tempCps.reduce((atual, elem) => 
+    atual + (elem.qtde * elem.valorU), 0);
+
+    itensUnicos = its.length;
+    itensTotais = tempCps.reduce((atual, elem) => atual + 1, 0);
+    valorMedio = valorTotalCompra / itensTotais;
+
+    //Extrai as lojas com compras na data especifica, remove as duplicatas e soma os valores de compras 
+    const tempLojas = tempCps.map((item) => item.idLoja);
+    const lojas = tempLojas.filter((item, index, self) => self.indexOf(item) === index);
+    dados = [];
+    lojas.map(item => dados.push(this.montaItemGrafico(item, tempCps.filter(cps => cps.idLoja === item).reduce((preVal, reduc) => preVal + reduc.valorU, 0))));
+    console.log(dados);
+  }
+
+  listaLojas(data, coluna) {
+    // Função para retornar a lista de lojas com compras
+    // data   = data da compra para filtrar o array geral
+    // coluna = define o tipo de retorno da função (útil para dividir a lista em duas colunas)
+    //          0 - retorna todos as lojas existentes
+    //          1 - retorna todas as lojas impares
+    //          2 - retorna todas as lojas pares
+
+    const tempCps = cps.filter((item) => item.data == data.toJSON());
+
+    // Obtem a lista de Lojas únicas
+    const tempLojas = tempCps.map((item) => item.idLoja);
+    const lojas = tempLojas.filter((item, index, self) => self.indexOf(item) === index);
+
+
+  }
+
+  montaItemGrafico(idLoja, valor) {
+    if (idLoja !== undefined || valor !== undefined) {
+      const loja = Loja.getNome(idLoja);
+      return { name: loja, y: valor };
+    }
+    return false;
+  }
+
   async updateLista() {
     this.setState({
       isLoading: true,
@@ -81,37 +128,22 @@ export default class ResumoListaScreen extends React.Component {
       if (await Compra.recuperar()) {
         // Caso existem compras registradas
         cps = Compra.getComprasMultiplas(its);
-        const tempDatas = cps.map((item) => new Date(item.data));
-        const datas = tempDatas.filter((item, index, self) => self.indexOf(item) === index);
-        datas.sort((a, b) => b - a);
+        if (cps.length > 0) {
+          //Extrai as datas de compras, remove as duplicatas e ordena
+          const tempDatas = cps.map((item) => item.data);
+          const datas = tempDatas.filter((item, index, self) => self.indexOf(item) === index).map(item => new Date(item));
+          datas.sort((a, b) => b - a);
 
-        //Variável que monta a lista de datas do Picker
-        datasPicker = datas.map((item, index) => (
-          <Picker.Item key={index} label={Data.dataToString(item)} value={item} />
-        ));
+          //Variável que monta a lista de datas do Picker
+          datasPicker = datas.map((item, index) => (
+            <Picker.Item key={index} label={Data.dataToString(item)} value={item} />
+          ));
 
-        valorTotalCompra = cps.reduce((atual, elem) => 
-        atual + (elem.qtde * elem.valorU), 0);
-
-        itensUnicos = its.length;
-        itensTotais = cps.reduce((atual, elem) => atual + elem.qtde, 0);
-        valorMedio = valorTotalCompra / itensTotais;
-        //cps.sort((a, b) => Date.parse(b.data) - Date.parse(a.data));
-        /*const mapaCompras = cps.map((elem, index) => (
-          
-        ));*/
-
-        /*let ultimo = 0;
-        let media = 0;
-        let menor = 0;
-        if (cps[0] !== undefined) {
-          ultimo = cps[0].valorU;
-          media = cps.reduce((total, item) => total + item.valorU, 0) / cps.length;
-          cps.sort((a, b) => a.valorU - b.valorU);
-          menor = cps[0].valorU;
-        }*/
-
-        this.setState({ isEmpty: false });
+          this.calculaEstatistica(datas[0]);
+          this.setState({ isEmpty: false });
+        } else {
+          this.setState({ isEmpty: true });
+        }
       } else {
         // Caso não existam compras registradas
         this.setState({ isEmpty: true });
@@ -129,11 +161,37 @@ export default class ResumoListaScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation;
+
+    var Highcharts='Highcharts';
+    const options = {
+      global: {
+        useUTC: false
+      },
+      lang: {
+        decimalPoint: ',',
+        thousandsSep: '.'
+      }
+    };
+    var conf={
+      chart: {
+        type: 'pie'
+      },
+      title: {
+        text: 'Compras por Loja'
+      },
+      series: [
+        {
+          name: 'Valor gasto',
+          data: dados
+        }
+      ]
+    };
     
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator
+            style={{ alignSelf: 'center' }}
             size='large'
           />
         </View>
@@ -164,15 +222,15 @@ export default class ResumoListaScreen extends React.Component {
 
     // Renderização em caso de sucesso ao recuperar as compras
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {/* View com o seletor de data da compra */}
         <View style={styles.viewData}> 
-          <Text style={{ width: 135, fontWeight: 'bold' }}>Data:</Text>
+          <Text style={{ width: 135, fontWeight: 'bold' }}>Data da compra:</Text>
           <Picker 
             style={styles.picker}
             prompt='Selecione uma data de compra:'
             selectedValue={this.state.data}
-            onValueChange={(itemValue) => this.setState({ data: itemValue })}
+            onValueChange={(itemValue) => {this.setState({ data: itemValue }); this.calculaEstatistica(itemValue);}}
           >
             { datasPicker }
           </Picker>
@@ -181,16 +239,12 @@ export default class ResumoListaScreen extends React.Component {
         {/* View com as estatística dos Itens */}
         <View style={styles.viewDetalhes}>
           <View style={styles.divisorInterno}>
-            <Text>Qtde. itens únicos: {itensUnicos}</Text>
-            <Text>Qtde. itens totais: {itensTotais}</Text>
+            <Text style={styles.textoQtde}>Qtde. itens únicos:</Text>
+            <Text style={styles.textoQtde}>{itensUnicos}</Text>
           </View>
           <View style={styles.divisorInterno}>
-            <Text style={{ textAlign: 'center' }}>
-              Valor médio por item:
-            </Text>
-            <Text style={{ textAlign: 'center' }}>
-              R$ {valorMedio.toFixed(2).replace('.', ',')}
-            </Text>
+            <Text style={styles.textoQtde}>Qtde. itens comprados:</Text>
+            <Text style={styles.textoQtde}>{itensTotais}</Text>
           </View>
         </View>
 
@@ -206,14 +260,13 @@ export default class ResumoListaScreen extends React.Component {
 
         {/* View com as estatísticas de gastos por loja */}
         <View style={styles.viewDetalhes}>
-          <View style={styles.divisorInterno}>
-            <Text>Gasto por loja:</Text>
-          </View>
-          <View style={styles.divisorInterno}>
-            <Text>Loja1 (componente para gerar a estatística por loja)</Text>
-          </View>
+           <ChartView 
+            style={{height:300, width: 300}} 
+            config={conf}
+            options={options} 
+          />
         </View>        
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -222,7 +275,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    alignItems: 'flex-start',
+    //alignItems: 'flex-start',
     paddingTop: 5,
     paddingHorizontal: 5,
     //justifyContent: 'flex-start',
@@ -257,7 +310,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#AAA',
     flexDirection: 'row',
     width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 5,
@@ -276,6 +329,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#2D37E7',
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  textoQtde: {
     textAlign: 'center',
   },
 });

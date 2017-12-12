@@ -148,10 +148,6 @@ export default class ListaScreen extends React.Component {
               source={calendario} 
             />
             <Text style={styles.data}>Adicione itens à sua lista</Text>
-            <Image 
-              style={styles.filtro}
-              source={filtro} 
-            />
           </View>
           <ScrollView style={styles.corpo}>
             <Text>Clique no botão abaixo para adicionar um novo item em sua lista.</Text>
@@ -165,7 +161,7 @@ export default class ListaScreen extends React.Component {
             />
           </ScrollView>
           <View style={styles.rodape}>
-            <Text>Rodape</Text>
+            <Text> </Text>
           </View>
         </View>
       );
@@ -189,6 +185,24 @@ export default class ListaScreen extends React.Component {
             style={styles.filtro}
             source={filtro} 
           />
+        </View>
+        <View style={styles.topo2}>
+          <Text style={styles.check}>Com-</Text>
+          <Text style={styles.item}>Item</Text>
+          <Text style={styles.promo}>Promoção</Text>
+          <Text style={styles.qtde}>Qtde</Text>
+          <Text style={styles.valor}>Valor Unit.</Text>
+          <Text style={styles.excluir}>Excluir</Text>
+          <Text style={styles.historico}>Com</Text>
+        </View>
+        <View style={styles.topo2}>
+          <Text style={styles.check}>prado</Text>
+          <Text style={styles.item}>Descrição</Text>
+          <Text style={styles.promo}>(* = Sim)</Text>
+          <Text style={styles.qtde}> </Text>
+          <Text style={styles.valor}>Valor Total</Text>
+          <Text style={styles.excluir}>Excluir</Text>
+          <Text style={styles.historico}>pras</Text>
         </View>
         <ScrollView style={styles.corpo}>
           { /* Apresenta texto de UX indicando como inserir uma compra */ }
@@ -231,6 +245,17 @@ const styles = StyleSheet.create({
     paddingLeft: 17,
     paddingVertical: 5,
     backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCC',
+  },
+  topo2: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 5,
+    //paddingVertical: 5,
+    backgroundColor: '#fff',
   },
   titulo: {
     width: '100%',
@@ -242,6 +267,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#555'
+  },
+  txtCab: {
+    fontSize: 10,
   },
   calendario: {
     height: 25,
@@ -268,5 +296,38 @@ const styles = StyleSheet.create({
     height: 50,
     width: '95%',
     marginHorizontal: 10,
+  },
+  check: {
+    width: '9%',
+    fontSize: 9,
+  },
+  item: {
+    width: '35%',
+    fontSize: 9,
+  },
+  promo: {
+    width: '12%',
+    fontSize: 9,
+    textAlign: 'center',
+  },
+  qtde: {
+    width: '7%',
+    fontSize: 9,
+    textAlign: 'center',
+  },
+  valor: {
+    width: '17%',
+    fontSize: 9,
+    textAlign: 'center',
+  },
+  excluir: {
+    width: '10%',
+    fontSize: 9,
+    textAlign: 'center',
+  },
+  historico: {
+    fontSize: 9,
+    width: '10%',
+    textAlign: 'center',
   },
 });

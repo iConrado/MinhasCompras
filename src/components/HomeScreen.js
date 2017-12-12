@@ -14,7 +14,7 @@ import {
 import Listagem from './Home/listagem';
 import Lista from './Functions/listas';
 
-const logo = require('../imgs/logo.png');
+const logo = require('../imgs/logo.gif');
 
 const styles = StyleSheet.create({
   container: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   logo: {
     alignSelf: 'center',
     height: 40,
-    width: 190,
+    width: 205,
   },
   textoNovo: {
     color: '#5685E2',
@@ -46,7 +46,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   alteraNome: {
-    backgroundColor: '#DFFFFE',
+    backgroundColor: '#FFF',
+    borderColor: '#CCC',
+    borderWidth: 1,
     borderRadius: 15,
     height: '70%',
     marginTop: 45,
