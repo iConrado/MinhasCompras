@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from 'react-native';
 import Compra from '../Functions/compras';
 import Data from '../Functions/datas';
+import Loja from '../Resumo/lojas';
 
 const lixeira = require('../../imgs/lixeira.png');
 
@@ -48,7 +49,8 @@ export default class ListagemCompras extends React.Component {
       <View style={styles.item}>
         {/*View segmento de loja da compra*/}
         <View style={styles.segLoja}> 
-          <Text style={styles.textoItem}>{this.props.idLoja}</Text>
+          <Loja idLoja={this.props.idLoja} />
+          {/*<Text style={styles.textoItem}>{this.props.idLoja}</Text>*/}
         </View>
         {/*View segmento de promoção da compra*/}
         <View style={styles.segPromo}> 

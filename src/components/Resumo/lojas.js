@@ -63,36 +63,20 @@ export default class Loja extends React.Component {
 	}
 
 	render() {
+    const idLoja = this.props.idLoja
 		return (
-      <View style={styles.container}>
-        <View style={styles.division1}>
-          <Image 
-            source={img[this.state.idLoja]}
-            style={styles.imagem} 
-          />
-        </View>
-        <View style={styles.division2}>
-          <Text>{this.state.valor}</Text>
-          <Text>{this.state.percentual}</Text>
-        </View>
-      </View>
+      <Image
+        source={img[idLoja]}
+        style={styles.imagem}
+      />
     );
 	}
 } 
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  division1: {
-    flex: 2
-  },
-  division1: {
-    flex: 3
-  },
   imagem: {
-    height: 40,
-    width: 40,
+    height: 15,
+    width: 15,
+    alignSelf: 'center',
   }
 });

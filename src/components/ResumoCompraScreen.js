@@ -6,12 +6,17 @@ import {
   View,
   ScrollView,
   TouchableOpacity } from 'react-native';
+import ChartView from 'react-native-highcharts';
 import Item from './Functions/itens';
 import Compra from './Functions/compras';
+import Data from './Functions/datas';
 import CabecalhoCompra from './Compras/cabecalho_compras';
 import ListagemCompras from './Compras/listagem_compras';
 
-let its = {};
+let its = [];
+let tempCps = [];
+let datas = [];
+let valores = [];
 
 const tituloLista = (
     <Text 
@@ -59,7 +64,8 @@ export default class ResumoCompraScreen extends React.Component {
     const id = this.props.navigation.state.params.idItem;
 
     try {
-      its = await Item.getItem(id);
+      its = [];
+      its.push(await Item.getItem(id));
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +80,15 @@ export default class ResumoCompraScreen extends React.Component {
 
     try {
       if (await Compra.recuperar()) {
-        this.setState({ isNew: false });
+        tempCps = Compra.getComprasMultiplas(its);
+        if (tempCps.length > 0) {
+          tempCps.sort((a, b) => Date.parse(a.data) - Date.parse(b.data));
+          datas = tempCps.map(item => Data.dataToString(new Date(item.data)).substr(0,5));
+          valores = tempCps.map(item => item.valorU);
+          this.setState({ isNew: false });
+        } else {
+          this.setState({ isNew: true });
+        }
       } else {
         this.setState({ isNew: true });
       }
@@ -90,6 +104,47 @@ export default class ResumoCompraScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     
+    const Highcharts='Highcharts';
+    const options = {
+      global: {
+        useUTC: false
+      },
+      lang: {
+        decimalPoint: ',',
+        thousandsSep: '.'
+      }
+    };
+    const conf={
+      chart: {
+        type: 'line'
+      },
+      title: {
+        text: 'Histórico de valor unitário'
+      },
+      xAxis: {
+        categories: datas
+      },
+      yAxis: {
+        title: {
+          text: null
+        }
+      },
+      plotOptions: {
+        line: {
+          dataLabels: {
+            enabled: true
+          },
+          enableMouseTracking: false
+        }
+      },
+      series: [
+        {
+          name: 'Valor',
+          data: valores
+        }
+      ]
+    };
+
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
@@ -104,8 +159,8 @@ export default class ResumoCompraScreen extends React.Component {
       return (
         <View style={styles.container}>
           <View style={styles.titulo}>
-            <Text style={styles.txtTitulo}>{its.nome}</Text>
-            <Text style={styles.txtTitulo}>{its.descricao}</Text>
+            <Text style={styles.txtTitulo}>{its[0].nome}</Text>
+            <Text style={styles.txtTitulo}>{its[0].descricao}</Text>
           </View>
           <ScrollView style={styles.corpo}>
             <Text style={{ textAlign: 'center' }}>
@@ -116,7 +171,7 @@ export default class ResumoCompraScreen extends React.Component {
             <TouchableOpacity
             style={styles.botaoNovo}
               onPress={() => navigate('Compra', {
-                idItem: its.idItem,
+                idItem: its[0].idItem,
                 updateLista: this.updateLista,
                 updateItens: this.props.navigation.state.params.updateLista,
                 navigation: this.props.navigation
@@ -129,7 +184,7 @@ export default class ResumoCompraScreen extends React.Component {
       );
     }
 
-    const cps = Compra.getCompras(its.idItem);
+    const cps = Compra.getCompras(its[0].idItem);
     cps.sort((a, b) => Date.parse(b.data) - Date.parse(a.data));
     const mapaCompras = cps.map((elem, index) => (
       <ListagemCompras
@@ -160,8 +215,8 @@ export default class ResumoCompraScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.titulo}>
-          <Text style={styles.txtTitulo}>{its.nome}</Text>
-          <Text style={styles.txtTitulo}>{its.descricao}</Text>
+          <Text style={styles.txtTitulo}>{its[0].nome}</Text>
+          <Text style={styles.txtTitulo}>{its[0].descricao}</Text>
         </View>
         <ScrollView style={styles.corpo}>
           <CabecalhoCompra />
@@ -169,27 +224,36 @@ export default class ResumoCompraScreen extends React.Component {
           { mapaCompras }
         </ScrollView>
         <View style={styles.rodape}>
-          <View style={styles.valoresLabel}>
-            <Text>Menor Valor: </Text>
-            <Text>Valor médio: </Text>
-            <Text>Último valor: </Text>
+          <View>
+            <ChartView 
+              style={{height:150, width: 300 }} 
+              config={conf}
+              options={options} 
+            />
           </View>
-          <View style={styles.valoresConteudo}>
-            <Text>R$ {menor.toFixed(2).replace('.', ',')}</Text>
-            <Text>R$ {media.toFixed(2).replace('.', ',')}</Text>
-            <Text>R$ {ultimo.toFixed(2).replace('.', ',')}</Text>
+          <View style={styles.resumo}>
+            <View style={styles.valoresLabel}>
+              <Text>Menor Valor: </Text>
+              <Text>Valor médio: </Text>
+              <Text>Último valor: </Text>
+            </View>
+            <View style={styles.valoresConteudo}>
+              <Text>R$ {menor.toFixed(2).replace('.', ',')}</Text>
+              <Text>R$ {media.toFixed(2).replace('.', ',')}</Text>
+              <Text>R$ {ultimo.toFixed(2).replace('.', ',')}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.botaoNovo}
+              onPress={() => navigate('Compra', {
+                idItem: its[0].idItem,
+                updateLista: this.updateLista,
+                updateItens: this.props.navigation.state.params.updateLista,
+                navigation: this.props.navigation
+              })}
+            >
+              <Text style={styles.textoBotao}>+</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.botaoNovo}
-            onPress={() => navigate('Compra', {
-              idItem: its.idItem,
-              updateLista: this.updateLista,
-              updateItens: this.props.navigation.state.params.updateLista,
-              navigation: this.props.navigation
-            })}
-          >
-            <Text style={styles.textoBotao}>+</Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -246,13 +310,20 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   rodape: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    //flexDirection: 'colunm',
+    //justifyContent: 'space-between',
     /*height: 50,*/
+    alignItems: 'center',
     width: '95%',
     marginHorizontal: 10,
     marginBottom: 10,
     paddingHorizontal: 5,
+  },
+  resumo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    /*height: 50,*/
+    width: '100%',
   },
   rodapeNovo: {
     flexDirection: 'row',

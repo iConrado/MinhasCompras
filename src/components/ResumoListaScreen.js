@@ -80,7 +80,6 @@ export default class ResumoListaScreen extends React.Component {
     const lojas = tempLojas.filter((item, index, self) => self.indexOf(item) === index);
     dados = [];
     lojas.map(item => dados.push(this.montaItemGrafico(item, tempCps.filter(cps => cps.idLoja === item).reduce((preVal, reduc) => preVal + reduc.valorU, 0))));
-    console.log(dados);
   }
 
   listaLojas(data, coluna) {
